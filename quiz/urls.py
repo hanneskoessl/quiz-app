@@ -8,4 +8,6 @@ app_name = "quiz"
 urlpatterns = [
     # Home page
     path("", views.index, name="index"),
+    # Page that shows a quiz.
+    path("quiz/", views.quiz, name="quiz"),
 ]

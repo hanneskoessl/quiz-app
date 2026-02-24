@@ -1,0 +1,23 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+
+<p>Fragen</p>
+
+<ul>
+    {% for question in questions %}
+    <li>{{ question.question }}
+        <ul>
+            {% for option in question.options.all %}
+            <li>{{ option.text }}</li>
+            {% empty %}
+            <li>Frage hat keine Antwortmöglichkeiten.</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% empty %}
+    <li>Quiz enthält noch keine Fragen.</li>
+    {% endfor%}
+</ul>
+
+{% endblock content %}
