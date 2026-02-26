@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from .models import Question, Option
@@ -11,3 +12,7 @@ def quiz(request):
     questions = Question.objects.prefetch_related("options")
     context = {'questions': questions}
     return render(request, 'quiz/quiz.html', context)
+
+def results(request):
+    """Quiz results."""
+    return HttpResponse("Quiz results (not implemented yet)")

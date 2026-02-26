@@ -10,4 +10,5 @@ urlpatterns = [
     path("", views.index, name="index"),
     # Page that shows a quiz.
     path("quiz/", views.quiz, name="quiz"),
+    path("results/", views.results, name="results"),
 ]
