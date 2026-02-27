@@ -3,30 +3,17 @@
 {% block content %}
 
 <p>Fragen</p>
-<form method="post" action="{% url 'quiz:results' %}">
+<form method="post">
     {% csrf_token %}
 
-    <ul>
-        {% for question in questions %}
-        <li>
-            <strong>{{ question.question }}</strong>
+    {% for field in form %}
+    <div class="field">
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
 
-            {% for option in question.options.all %}
-            <div>
-                <input type="radio" id="option_{{ option.id }}" name="question_{{ question.id}}"
-                    value="{{ option.id }}" />
-                <label for="option_{{ option.id }}">{{ option.text }}</label>
-            </div>
-            {% empty %}
-            <P>Frage hat keine Antwortmöglichkeiten.</P>
-            {% endfor %}
-
-        </li>
-
-        {% empty %}
-        <li>Quiz enthält noch keine Fragen.</li>
-        {% endfor%}
-    </ul>
     <button type="submit">Abgeben</button>
 </form>
 

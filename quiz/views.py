@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
+from .forms import QuizForm
 from .models import Question, Option
 
 def index(request):
@@ -10,7 +11,17 @@ def index(request):
 def quiz(request):
     """Shows a quiz."""
     questions = Question.objects.prefetch_related("options")
-    context = {'questions': questions}
+    
+    if request.method == "POST":
+        form = QuizForm(request.POST, questions=questions)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            print(cleaned_data)
+            return redirect("quiz:results")        
+    else:
+        form = QuizForm(questions=questions)
+
+    context = {'form': form}
     return render(request, 'quiz/quiz.html', context)
 
 def results(request):
