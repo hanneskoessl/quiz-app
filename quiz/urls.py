@@ -9,6 +9,7 @@ urlpatterns = [
     # Home page
     path("", views.index, name="index"),
     # Page that shows a quiz.
-    path("quiz/", views.quiz, name="quiz"),
+    path("quizzes/", views.quizzes, name="quizzes"),
+    path("quiz/<int:quiz_id>/", views.quiz, name="quiz"),
     path("results/", views.results, name="results"),
 ]
