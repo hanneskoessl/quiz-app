@@ -1,8 +1,9 @@
+from django.db import transaction
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 from .forms import QuizForm
-from .models import Question, Quiz, Option
+from .models import Answer, Question, Quiz, QuizAttempt, Option
 
 def index(request):
     """The home page for Quiz."""
@@ -16,18 +17,70 @@ def quizzes(request):
 
 def quiz(request, quiz_id):
     """Shows a quiz."""
-    quiz = Quiz.objects.get(id=quiz_id)
-    questions = quiz.questions.prefetch_related("options")
+    quiz = get_object_or_404(
+        Quiz.objects.prefetch_related("questions__options"),
+        id=quiz_id
+    )
+    
+    questions = quiz.questions.all()
     
     if request.method == "POST":
         form = QuizForm(request.POST, questions=questions)
+
         if form.is_valid():
-            cleaned_data = form.cleaned_data
-            print(cleaned_data)
+            score = 0
+            total = questions.count()
+
+            print(form.cleaned_data)
+
+            attempt = QuizAttempt.objects.create(
+                quiz=quiz,
+                score=0,
+                total=total,
+            )
+
+            answers_to_create = []
+
+            for question in quiz.questions.all():
+                                
+                selected_qs = form.cleaned_data.get(
+                    f"question_{question.id}", 
+                    question.options.none()
+                )
+
+                selected_ids = set(
+                    selected_qs.values_list("id", flat=True)
+                )
+
+                correct_ids = set(
+                    question.options
+                    .filter(is_correct=True)
+                    .values_list("id", flat=True)
+                )
+                
+                is_question_correct = selected_ids == correct_ids
+
+                if is_question_correct:
+                    score += 1
+
+                for option in selected_qs:
+                    answers_to_create.append(
+                        Answer(
+                            attempt=attempt,
+                            question=question,
+                            option=option,
+                            is_correct=option.is_correct,
+                        )
+                    )
+                    
+            Answer.objects.bulk_create(answers_to_create)
+
+            attempt.score = score
+            attempt.save()
 
             return redirect("quiz:results")        
     else:
-        form = QuizForm(questions=questions)
+        form = QuizForm(questions=quiz.questions.all())
 
     context = {'form': form}
     return render(request, 'quiz/quiz.html', context)
