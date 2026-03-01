@@ -15,6 +15,7 @@ def quizzes(request):
     context = {'quizzes': quizzes}
     return render(request, "quiz/quizzes.html", context)
 
+@transaction.atomic
 def quiz(request, quiz_id):
     """Shows a quiz."""
     quiz = get_object_or_404(
@@ -41,7 +42,7 @@ def quiz(request, quiz_id):
 
             answers_to_create = []
 
-            for question in quiz.questions.all():
+            for question in questions:
                                 
                 selected_qs = form.cleaned_data.get(
                     f"question_{question.id}", 
