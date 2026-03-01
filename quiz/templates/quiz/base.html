@@ -1,6 +1,22 @@
-<p>
-    <a href="{% url 'quiz:index' %}">Quiz</a>
-    <a href="{% url 'quiz:quizzes' %}">Start</a>
-</p>
+<!DOCTYPE html>
+<html>
 
-{% block content %}{% endblock content%}
+<head>
+    <title>Quiz</title>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <p>
+        <a href="{% url 'quiz:index' %}">Quiz</a>
+        <a href="{% url 'quiz:quizzes' %}">Start</a>
+    </p>
+
+
+    {% block content %}{% endblock content%}
+
+</body>
+
+</html>
