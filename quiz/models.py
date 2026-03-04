@@ -55,7 +55,6 @@ class Answer(models.Model):
     attempt = models.ForeignKey(QuizAttempt, on_delete=models.CASCADE, related_name="answers")
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, on_delete=models.CASCADE)
-    is_correct = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.question.question[:30]} - {self.option.text}"

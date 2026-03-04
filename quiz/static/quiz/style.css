@@ -1,0 +1,60 @@
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+li {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border: 3px dashed white;
+}
+
+.option {
+    width: 500px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border: 3px solid transparent;
+}
+
+.option-text {
+    flex-grow: 1;
+}
+
+.correct-selected {
+    border-color: green;
+}
+
+.wrong-selected {
+    border-color: red;
+}
+
+.correct-missed {
+    border-style: dashed;
+    border-color: green;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.option-answer {
+    width: 30px;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+
+.option-result {
+    width: 30px;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+

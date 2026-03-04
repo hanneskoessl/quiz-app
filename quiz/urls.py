@@ -11,5 +11,5 @@ urlpatterns = [
     # Page that shows a quiz.
     path("quizzes/", views.quizzes, name="quizzes"),
     path("quiz/<int:quiz_id>/", views.quiz, name="quiz"),
-    path("results/", views.results, name="results"),
+    path("results/<int:attempt_id>", views.results, name="results"),
 ]

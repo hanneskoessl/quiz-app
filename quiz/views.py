@@ -70,7 +70,6 @@ def quiz(request, quiz_id):
                             attempt=attempt,
                             question=question,
                             option=option,
-                            is_correct=option.is_correct,
                         )
                     )
                     
@@ -79,13 +78,38 @@ def quiz(request, quiz_id):
             attempt.score = score
             attempt.save()
 
-            return redirect("quiz:results")        
+            return redirect("quiz:results", attempt_id=attempt.id)        
     else:
         form = QuizForm(questions=quiz.questions.all())
 
     context = {'form': form}
     return render(request, 'quiz/quiz.html', context)
 
-def results(request):
+def results(request, attempt_id):
     """Quiz results."""
-    return HttpResponse("Quiz results (not implemented yet)")
+    attempt = get_object_or_404(
+        QuizAttempt,
+        id=attempt_id
+    )
+
+    quiz = attempt.quiz
+    
+    questions = quiz.questions.prefetch_related("options")
+    
+    selected_dict = {}
+
+    for answer in attempt.answers.all():
+        selected_dict.setdefault(answer.question_id, set()).add(answer.option_id)
+
+    for question in questions:
+        for option in question.options.all():
+            option.selected = option.id in selected_dict.get(question.id, set())
+            option.correct = option.is_correct
+
+    print(selected_dict)
+
+    context = {'quiz': quiz,
+               'questions': questions,
+               'attempt': attempt,
+               }
+    return render(request, 'quiz/results.html', context)
