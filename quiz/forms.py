@@ -1,5 +1,7 @@
 from django import forms
 
+from .models import Quiz
+
 class QuizForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
@@ -13,8 +15,14 @@ class QuizForm(forms.Form):
                 widget=forms.CheckboxSelectMultiple,
                 label=question.question,     
             )
-            
 
-    
+
+class NewQuizForm(forms.ModelForm):
+    class Meta:
+        model = Quiz
+        fields = ['title']
+        labels = {'title': ''}
+
+
         
     
