@@ -1,0 +1,52 @@
+{% extends 'quiz/base.html' %}
+
+{% block extra_head %}
+<script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$']]
+        }
+    };
+</script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<h2>Quiz</h2>
+
+{% for question in questions %}
+<div class="field">
+
+    <p>{{ question }}</p>
+
+    <ul>
+        {% for option in question.options.all %}
+        <li>
+            <span class="left">
+                <span class="option-answer">
+                    {% if option.correct %}
+                    ☑
+                    {% endif %}
+                </span>
+
+                <span class="option-text">
+                    {{ option }}
+                </span>
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+{% endfor %}
+
+<form action="{% url 'quiz:new_question' quiz.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <button name="submit">Erstellen</button>
+</form>
+
+{% endblock %}

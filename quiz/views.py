@@ -2,7 +2,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
-from .forms import QuizForm, NewQuizForm
+from .forms import QuizForm, NewQuizForm, NewQuestionForm
 from .models import Answer, Question, Quiz, QuizAttempt, Option
 
 def index(request):
@@ -122,7 +122,36 @@ def new_quiz(request):
         form = NewQuizForm(data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect("quiz:index")
+            return redirect("quiz:new_question", quiz_id=form.instance.id)
     
     context = {'form': form}
     return render(request, 'quiz/new_quiz.html', context)
+
+def new_question(request, quiz_id):
+    """Add a new question."""
+    quiz = get_object_or_404(
+        Quiz,
+        id=quiz_id
+    )
+    
+    questions = quiz.questions.prefetch_related("options")
+    
+    for question in questions:
+        for option in question.options.all():
+            option.correct = option.is_correct
+
+    if request.method != 'POST':
+        form = NewQuestionForm()
+    else:
+        form = NewQuestionForm(data=request.POST)
+        if form.is_valid():
+            question = form.save()
+            quiz.questions.add(question)
+            
+            return redirect('quiz:new_question', quiz_id=quiz_id)
+        
+    context = {'quiz': quiz,
+               'questions': questions,
+               'form': form,
+               }
+    return render(request, 'quiz/new_question.html', context)
