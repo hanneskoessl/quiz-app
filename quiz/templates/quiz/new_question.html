@@ -19,15 +19,27 @@
 
 {% for question in questions %}
 <div class="field">
+    <div class="question-header">
 
-    <p>{{ question }}</p>
-    <span><a href="{% url 'quiz:new_option' quiz.id question.id %}">Neuen Antwortmöglichkeit erstellen</a></span>
+        <strong>{{ question }}</strong>
+
+        <a href="{% url 'quiz:new_option' quiz.id question.id %}">
+            ➕ Antwort hinzufügen
+        </a>
+
+        <form action="{% url 'quiz:delete_question' quiz.id question.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Frage wirklich löschen?');">
+                🗑 Frage löschen
+            </button>
+        </form>
+    </div>
     <ul>
         {% for option in question.options.all %}
         <li>
             <span class="left">
                 <span class="option-answer">
-                    {% if option.correct %} ☑ {% endif %}
+                    {% if option.is_correct %} ☑ {% endif %}
                 </span>
                 <span class="option-text">
                     {{ option }}

@@ -136,10 +136,6 @@ def new_question(request, quiz_id):
     
     questions = quiz.questions.prefetch_related("options")
     
-    for question in questions:
-        for option in question.options.all():
-            option.correct = option.is_correct
-
     if request.method != 'POST':
         form = NewQuestionForm()
     else:
@@ -192,3 +188,16 @@ def delete_quiz(request, quiz_id):
         return redirect ('quiz:quizzes')
 
     return redirect ('quiz:quizzes')
+
+def delete_question(request, quiz_id, question_id):
+    """Delete a question."""
+    question = get_object_or_404(
+        Question,
+        id=question_id
+    )
+
+    if request.method == 'POST':
+        question.delete()
+        return redirect ('quiz:new_question', quiz_id=quiz_id)
+
+    return redirect ('quiz:new_question', quiz_id=quiz_id)
