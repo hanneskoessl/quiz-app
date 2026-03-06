@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Question, Quiz
+from .models import Option, Question, Quiz
 
 class QuizForm(forms.Form):
 
@@ -30,3 +30,11 @@ class NewQuestionForm(forms.ModelForm):
         fields = ['question', 'difficulty']
         labels = {'question': '',
                   'difficulty': ''}
+        
+
+class NewOptionForm(forms.ModelForm):
+    class Meta:
+        model = Option
+        fields = ['text', 'is_correct']
+        labels = {'text': '',
+                  'is_correct': ''}
