@@ -6,7 +6,10 @@
 
 <ul>
     {% for quiz in quizzes %}
-    <li><a href="{% url 'quiz:quiz' quiz.id%}">{{ quiz.title }}</a></li>
+    <li>
+        <a href="{% url 'quiz:quiz' quiz.id%}">{{ quiz.title }}</a>
+        <a href="{% url 'quiz:new_question' quiz.id%}">Quiz bearbeiten</a>
+    </li>
     {% empty %}
     <li>Noch kein Quiz vorhanden.</li>
     {% endfor %}
