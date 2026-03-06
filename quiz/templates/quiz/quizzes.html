@@ -9,6 +9,12 @@
     <li>
         <a href="{% url 'quiz:quiz' quiz.id%}">{{ quiz.title }}</a>
         <a href="{% url 'quiz:new_question' quiz.id%}">Quiz bearbeiten</a>
+        <form action="{% url 'quiz:delete_quiz' quiz.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Quiz wirklich löschen?');">
+                Quiz löschen
+            </button>
+        </form>
     </li>
     {% empty %}
     <li>Noch kein Quiz vorhanden.</li>

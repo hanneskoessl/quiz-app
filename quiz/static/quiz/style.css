@@ -48,13 +48,18 @@ li {
     text-align: center;
 }
 
-
+ul li form {
+    display:inline;
+    background-color: red;
+    color: blue;
+}
 
 .option-result {
     width: 30px;
     font-size: 20px;
     text-align: center;
 }
+
 
 
 

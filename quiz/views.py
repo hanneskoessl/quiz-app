@@ -179,3 +179,16 @@ def new_option(request, quiz_id, question_id):
                'form': form,
                }
     return render(request, 'quiz/new_option.html', context)
+
+def delete_quiz(request, quiz_id):
+    """Delete a quiz."""
+    quiz = get_object_or_404(
+        Quiz,
+        id=quiz_id
+    )
+
+    if request.method == 'POST':
+        quiz.delete()
+        return redirect ('quiz:quizzes')
+
+    return redirect ('quiz:quizzes')
