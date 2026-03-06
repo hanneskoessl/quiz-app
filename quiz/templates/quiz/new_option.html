@@ -32,6 +32,14 @@
                 <span class="option-text">
                     {{ option }}
                 </span>
+
+                <form action="{% url 'quiz:delete_option' quiz_id question.id option.id%}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Antwort wirklich löschen?');">
+                        🗑 Antwort löschen
+                    </button>
+                </form>
+
             </span>
         </li>
         {% endfor %}

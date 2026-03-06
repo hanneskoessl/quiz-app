@@ -201,3 +201,16 @@ def delete_question(request, quiz_id, question_id):
         return redirect ('quiz:new_question', quiz_id=quiz_id)
 
     return redirect ('quiz:new_question', quiz_id=quiz_id)
+
+def delete_option(request, quiz_id, question_id, option_id):
+    """Delete an option."""
+    option = get_object_or_404(
+        Option,
+        id=option_id
+    )
+
+    if request.method == 'POST':
+        option.delete()
+        return redirect ('quiz:new_option', quiz_id=quiz_id, question_id=question_id)
+
+    return redirect ('quiz:new_option', quiz_id=quiz_id, question_id=question_id)
