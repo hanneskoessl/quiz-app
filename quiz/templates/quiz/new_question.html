@@ -18,33 +18,45 @@
 <h2>Quiz</h2>
 
 {% for question in questions %}
-<div class="field">
+<div class="question-card">
+
     <div class="question-header">
 
-        <strong>{{ question }}</strong>
+        <div class="question-title">
+            {{ question }}
+        </div>
 
-        <a href="{% url 'quiz:new_option' quiz.id question.id %}">
-            ➕ Antwort hinzufügen
-        </a>
+        <div class="question-actions">
 
-        <form action="{% url 'quiz:delete_question' quiz.id question.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" onclick="return confirm('Frage wirklich löschen?');">
-                🗑 Frage löschen
-            </button>
-        </form>
+            <a href="{% url 'quiz:new_option' quiz.id question.id %}">
+                ➕ Antwort hinzufügen
+            </a>
+
+            <form class="delete-form" action="{% url 'quiz:delete_question' quiz.id question.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn-delete" type="submit" onclick="return confirm('Frage wirklich löschen?');">
+                    Frage löschen
+                </button>
+            </form>
+
+        </div>
     </div>
-    <ul>
+
+    <ul class="option-list">
         {% for option in question.options.all %}
-        <li>
-            <span class="left">
-                <span class="option-answer">
+
+        <li class="option-item">
+
+            <div class="option-row">
+
+                <div class="option-indicator">
                     {% if option.is_correct %} ☑ {% endif %}
-                </span>
-                <span class="option-text">
+                </div>
+
+                <div class="option-text">
                     {{ option }}
-                </span>
-            </span>
+                </div>
+            </div>
         </li>
         {% endfor %}
     </ul>
@@ -52,10 +64,12 @@
 </div>
 {% endfor %}
 
-<form action="{% url 'quiz:new_question' quiz.id %}" method="post">
-    {% csrf_token %}
-    {{ form.as_div }}
-    <button name="submit">Erstellen</button>
-</form>
+<div class="new-question-form">
+    <form action="{% url 'quiz:new_question' quiz.id %}" method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button name="submit">Erstellen</button>
+    </form>
+</div>
 
 {% endblock %}

@@ -11,14 +11,22 @@
 </head>
 
 <body>
+    <div class="panel">
 
-    <p>
-        <a href="{% url 'quiz:index' %}">Quiz</a>
-        <a href="{% url 'quiz:quizzes' %}">Start</a>
-    </p>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <a href="/">QuizApp</a>
+            </div>
 
+            <ul class="nav-links">
+                <li><a href="{% url 'quiz:index' %}">Quizze</a></li>
+                <li><a href="{% url 'quiz:quizzes' %}">Quizze bearbeiten</a></li>
+            </ul>
+        </nav>
 
-    {% block content %}{% endblock content%}
+        {% block content %}{% endblock content%}
+
+    </div>
 
 </body>
 

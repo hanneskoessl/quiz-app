@@ -16,12 +16,14 @@
 
 {% block content %}
 
-<p>Erstelle einen neue Quiz:</p>
+<h2>Erstelle einen neue Quiz:</h2>
 
-<form action="{% url 'quiz:new_quiz' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_div }}
-    <button name="submit">Erstellen</button>
-</form>
+<div class="new-quiz-form">
+    <form action="{% url 'quiz:new_quiz' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button name="submit">Erstellen</button>
+    </form>
+</div>
 
 {% endblock %}

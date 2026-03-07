@@ -16,20 +16,22 @@
 
 {% block content %}
 
-<p>Fragen</p>
+<h2>Fragen</h2>
 
-<form method="post">
-    {% csrf_token %}
+<div class="quiz-form">
+    <form method="post">
+        {% csrf_token %}
 
-    {% for field in form %}
-    <div class="field">
-        {{ field.label_tag }}
-        {{ field }}
-        {{ field.errors }}
-    </div>
-    {% endfor %}
+        {% for field in form %}
+        <div class="quiz-field">
+            {{ field.label_tag }}
+            {{ field }}
+            {{ field.errors }}
+        </div>
+        {% endfor %}
 
-    <button type="submit">Abgeben</button>
-</form>
+        <button type="submit">Abgeben</button>
+    </form>
+</div>
 
 {% endblock %}

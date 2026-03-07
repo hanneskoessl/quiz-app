@@ -104,7 +104,6 @@ def results(request, attempt_id):
     for question in questions:
         for option in question.options.all():
             option.selected = option.id in selected_dict.get(question.id, set())
-            option.correct = option.is_correct
 
     print(selected_dict)
 

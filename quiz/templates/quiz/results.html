@@ -18,36 +18,52 @@
 <h2>Ergebnis</h2>
 
 {% for question in questions %}
-<div class="field">
+<div class="question-card">
 
-    <p>{{ question }}</p>
+    <div class="question-header">
 
-    <ul>
+        <div class="question-title">
+            {{ question }}
+        </div>
+
+    </div>
+
+    <ul class="option-list">
         {% for option in question.options.all %}
+
         <li class="option
-            {% if option.selected and option.correct %} correct-selected
-            {% elif option.selected and not option.correct %} wrong-selected
-            {% elif not option.selected and option.correct %} correct-missed
+            {% if option.selected and option.is_correct %} correct-selected
+            {% elif option.selected and not option.is_correct %} wrong-selected
+            {% elif not option.selected and option.is_correct %} correct-missed
             {% endif %}
             ">
-            <span class="left">
-                <span class="option-answer">
+
+            <div class="option-row-left">
+
+                <div class="option-indicator">
                     {% if option.selected %}
                     ☑
                     {% endif %}
-                </span>
+                </div>
 
-                <span class="option-text">
+                <div class="option-text">
                     {{ option }}
-                </span>
-            </span>
-            <span class="option-result">
-                {% if option.correct == option.selected %}
-                ✅
-                {% else %}
-                ❌
-                {% endif %}
-            </span>
+                </div>
+            </div>
+
+            <div class="option-row-right">
+
+                <div class="option-row-answer">
+
+                    {% if option.is_correct == option.selected %}
+                    ✅
+                    {% else %}
+                    ❌
+                    {% endif %}
+
+                </div>
+
+            </div>
         </li>
         {% endfor %}
     </ul>
