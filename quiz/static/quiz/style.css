@@ -1,6 +1,43 @@
-ul {
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: 'Open Sans', sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: #234874;;
+}
+
+a:hover {
+    color: #acbfd4;
+}
+
+body {
+    background-color: #acbfd4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    
+}
+
+.panel {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px 25px;
+    width: 100%;
+    max-width: 900px;
+    min-height: 500px;
+}
+
+ul, ol{
     list-style: none;
-    padding-left: 0;
+    padding: 0;
 }
 
 li {
@@ -8,6 +45,52 @@ li {
     margin-bottom: 5px;
     border-radius: 5px;
     border: 3px dashed white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #2e5d96;
+    color: white;
+
+    padding: 10px 18px;
+    margin-bottom: 20px;
+
+    border-radius: 8px;
+}
+
+.nav-brand a {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-links li {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links a {
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    transition: background 0.2s ease;
+}
+
+.nav-links a:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.nav-links a.active {
+    background: rgba(255,255,255,0.35);
 }
 
 .option {
@@ -36,13 +119,32 @@ li {
     border-color: green;
 }
 
-.left {
+.quiz-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid black;
+}
+
+.quiz-row-left, .quiz-row-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.option-row-left, .option-row {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.option-answer {
+.quiz-text {
+    flex-grow: 1;
+}
+
+.option-indicator {
     width: 30px;
     font-size: 20px;
     text-align: center;
@@ -60,7 +162,21 @@ ul li form {
     text-align: center;
 }
 
+.question-card {
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px 0;
+}
+
 .question-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+
+.question-actions {
     display: flex;
     gap: 10px;
     align-items: center;
