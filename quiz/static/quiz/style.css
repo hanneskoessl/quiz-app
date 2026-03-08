@@ -5,6 +5,7 @@
 }
 
 html {
+    overflow-y: scroll;
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -42,7 +43,7 @@ ul, ol{
 
 li {
     padding: 8px 12px;
-    margin-bottom: 5px;
+    margin: 5px 0;
     border-radius: 5px;
     border: 3px dashed white;
 }
@@ -124,7 +125,11 @@ li {
     justify-content: space-between;
     align-items: center;
     gap: 8px;
-    border: 1px solid black;
+    border: 1px solid #ddd;
+    padding: 12px 8px;
+    border-radius: 5px;
+    cursor: pointer;    
+    background: #fafafa;
 }
 
 .quiz-row-left, .quiz-row-right {
@@ -181,6 +186,73 @@ ul li form {
     gap: 10px;
     align-items: center;
 }
+
+.quiz-question {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background: #fafafa;
+}
+
+.quiz-question-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.quiz-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.quiz-options label:hover {
+    background: #eef4fb;
+}
+
+button, .quiz-edit, .link-new-quiz {
+    
+    padding: 8px 12px;
+
+    background: #2e5d96;
+    color: white;
+
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.link-new-quiz {
+    
+    width: 180px;
+}
+
+.quiz-edit a, .link-new-quiz a {
+    color: white;
+    font-size: 15px;
+}
+
+button:hover, .quiz-edit:hover, .link-new-quiz:hover{
+    background: #1a3556;
+}
+
+.quiz-submit {
+    margin-top: 20px;
+    padding: 10px 16px;
+}
+
+
+
 
 
 
