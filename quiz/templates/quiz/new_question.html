@@ -32,10 +32,10 @@
                 ➕ Antwort hinzufügen
             </a>
 
-            <form class="delete-form" action="{% url 'quiz:delete_question' quiz.id question.id %}" method="post">
+            <form class="remove-form" action="{% url 'quiz:remove_question' quiz.id question.id %}" method="post">
                 {% csrf_token %}
-                <button class="btn-delete" type="submit" onclick="return confirm('Frage wirklich löschen?');">
-                    Frage löschen
+                <button class="btn-delete" type="submit">
+                    Frage entfernen
                 </button>
             </form>
 

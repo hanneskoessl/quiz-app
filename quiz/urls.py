@@ -17,5 +17,6 @@ urlpatterns = [
     path("new_option/<int:quiz_id>/<int:question_id>/", views.new_option, name="new_option"),
     path("quizzes/delete_quiz/<int:quiz_id>/", views.delete_quiz, name="delete_quiz"),
     path("delete_question/<int:quiz_id>/<int:question_id>/", views.delete_question, name="delete_question"),
+    path("remove_question/<int:quiz_id>/<int:question_id>/", views.remove_question, name="remove_question"),
     path("delete_option/<int:quiz_id>/<int:question_id>/<int:option_id>/", views.delete_option, name="delete_option"),
 ]
