@@ -65,10 +65,26 @@
 {% endfor %}
 
 <div class="new-question-form">
+
+    <h3>Neue Frage erstellen</h3>
+
     <form action="{% url 'quiz:new_question' quiz.id %}" method="post">
         {% csrf_token %}
-        {{ form.as_div }}
-        <button name="submit">Erstellen</button>
+        {{ new_form.as_div }}
+        <button type="submit" name="create_question">
+            Frage erstellen
+        </button>
+    </form>
+
+
+    <h3>Vorhandene Frage hinzufügen</h3>
+
+    <form action="{% url 'quiz:new_question' quiz.id %}" method="post">
+        {% csrf_token %}
+        {{ existing_form.as_div }}
+        <button type="submit" name="add_existing">
+            Frage hinzufügen
+        </button>
     </form>
 </div>
 

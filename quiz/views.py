@@ -2,7 +2,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
-from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm
+from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
 from .models import Answer, Question, Quiz, QuizAttempt, Option
 
 def index(request):
@@ -129,27 +129,44 @@ def new_quiz(request):
 def new_question(request, quiz_id):
     """Add a new question."""
     quiz = get_object_or_404(
-        Quiz,
+        Quiz, 
         id=quiz_id
     )
-    
+
     questions = quiz.questions.prefetch_related("options")
-    
-    if request.method != 'POST':
-        form = NewQuestionForm()
+
+    if request.method == "POST":
+
+        if "create_question" in request.POST:
+            new_form = NewQuestionForm(request.POST)
+
+            if new_form.is_valid():
+                question = new_form.save()
+                quiz.questions.add(question)
+
+                return redirect("quiz:new_question", quiz_id=quiz_id)
+
+        elif "add_existing" in request.POST:
+            existing_form = AddExistingQuestionForm(request.POST)
+
+            if existing_form.is_valid():
+                question = existing_form.cleaned_data["question"]
+                quiz.questions.add(question)
+
+                return redirect("quiz:new_question", quiz_id=quiz_id)
+
     else:
-        form = NewQuestionForm(data=request.POST)
-        if form.is_valid():
-            question = form.save()
-            quiz.questions.add(question)
-            
-            return redirect('quiz:new_question', quiz_id=quiz_id)
-        
-    context = {'quiz': quiz,
-               'questions': questions,
-               'form': form,
-               }
-    return render(request, 'quiz/new_question.html', context)
+        new_form = NewQuestionForm()
+        existing_form = AddExistingQuestionForm()
+
+    context = {
+        "quiz": quiz,
+        "questions": questions,
+        "new_form": new_form,
+        "existing_form": existing_form,
+    }
+
+    return render(request, "quiz/new_question.html", context)
 
 def new_option(request, quiz_id, question_id):
     """Add a new question."""

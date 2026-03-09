@@ -32,6 +32,13 @@ class NewQuestionForm(forms.ModelForm):
                   'difficulty': ''}
         
 
+class AddExistingQuestionForm(forms.Form):
+    question = forms.ModelChoiceField(
+        queryset=Question.objects.all(),
+        label="Vorhandene Frage auswählen"
+    )
+        
+
 class NewOptionForm(forms.ModelForm):
     class Meta:
         model = Option
