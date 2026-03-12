@@ -13,11 +13,11 @@ class Difficulty(models.IntegerChoices):
 
 class Question(models.Model):
     """Question that can be used to create a quiz."""
-    question = models.CharField(max_length=600)
+    question = models.TextField()
     difficulty = models.PositiveSmallIntegerField(choices=Difficulty.choices)
 
     def __str__(self):
-        return self.question
+        return self.question[:50]
 
 
 class Option(models.Model):
@@ -33,6 +33,7 @@ class Option(models.Model):
 class Quiz(models.Model):
     """Quiz"""
     title = models.CharField(max_length=200)
+    explanation = models.TextField(blank=True)
     questions = models.ManyToManyField(Question, related_name="quizzes")
 
     def __str__(self):

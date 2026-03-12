@@ -219,7 +219,7 @@ ul li form {
     background: #eef4fb;
 }
 
-button, .quiz-edit, .link-new-quiz {
+button, .quiz-edit, .link-new-quiz, .link-edit-quiz {
     
     padding: 8px 12px;
 
@@ -232,17 +232,17 @@ button, .quiz-edit, .link-new-quiz {
     cursor: pointer;
 }
 
-.link-new-quiz {
+.link-new-quiz, .link-edit-quiz {
     
     width: 180px;
 }
 
-.quiz-edit a, .link-new-quiz a {
+.quiz-edit a, .link-new-quiz a, .link-edit-quiz a {
     color: white;
     font-size: 15px;
 }
 
-button:hover, .quiz-edit:hover, .link-new-quiz:hover{
+button:hover, .quiz-edit:hover, .link-new-quiz:hover, .link-edit-quiz:hover{
     background: #1a3556;
 }
 

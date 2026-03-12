@@ -1,0 +1,36 @@
+{% extends 'quiz/base.html' %}
+
+{% block extra_head %}
+<script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$']]
+        }
+    };
+</script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<h2>Quiz {{ quiz.title }}</h2>
+
+<h2>Quiz bearbeiten:</h2>
+
+<div class="new-quiz-form">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button type="submit">Bearbeiten</button>
+    </form>
+</div>
+
+<div class="link-edit-quiz">
+    <a href="{% url 'quiz:new_question' quiz.id %}">Verwerfen</a>
+</div>
+
+
+
+{% endblock %}

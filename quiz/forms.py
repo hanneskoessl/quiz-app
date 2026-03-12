@@ -20,8 +20,9 @@ class QuizForm(forms.Form):
 class NewQuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['title']
-        labels = {'title': ''}
+        fields = ['title', 'explanation']
+        labels = {'title': '',
+                  'explanation': ''}
 
 
 class NewQuestionForm(forms.ModelForm):

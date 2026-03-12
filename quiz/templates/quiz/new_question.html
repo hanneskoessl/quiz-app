@@ -15,7 +15,15 @@
 
 {% block content %}
 
-<h2>Quiz</h2>
+<h2>Quiz {{ quiz.title }}</h2>
+
+<div class="quiz-explanation">
+    {{ quiz.explanation|urlize|linebreaks }}
+</div>
+
+<div class="link-edit-quiz">
+    <a href="{% url 'quiz:edit_quiz' quiz.id %}">Titel und Erklärung bearbeiten</a>
+</div>
 
 {% for question in questions %}
 <div class="question-card">

@@ -82,7 +82,9 @@ def quiz(request, quiz_id):
     else:
         form = QuizForm(questions=quiz.questions.all())
 
-    context = {'form': form}
+    context = {'quiz': quiz,
+               'form': form,
+               }
     return render(request, 'quiz/quiz.html', context)
 
 def results(request, attempt_id):
@@ -125,6 +127,31 @@ def new_quiz(request):
     
     context = {'form': form}
     return render(request, 'quiz/new_quiz.html', context)
+
+def edit_quiz(request, quiz_id):
+    """Edit a quiz."""
+
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    print(quiz_id, quiz.id)
+    print(quiz.id, quiz.title)
+    print(quiz.explanation)
+
+    if request.method == "POST":
+        form = NewQuizForm(request.POST, instance=quiz)
+
+        if form.is_valid():
+            form.save()
+            return redirect("quiz:new_question", quiz_id=quiz.id)
+
+    else:
+        form = NewQuizForm(instance=quiz)
+
+    context = {
+        "quiz": quiz,
+        "form": form,
+    }
+
+    return render(request, "quiz/edit_quiz.html", context)
 
 def new_question(request, quiz_id):
     """Add a new question."""
