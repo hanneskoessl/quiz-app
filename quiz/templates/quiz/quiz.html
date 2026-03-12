@@ -17,7 +17,8 @@
 {% block content %}
 
 <div class="explanation">
-    {{ quiz.explanation|urlize_blank|linebreaks }}
+    {% load linkify %}
+    {{ quiz.explanation|linebreaks|urlize_blank }}
 </div>
 
 <h2>Fragen</h2>
