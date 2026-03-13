@@ -15,15 +15,20 @@
 
 {% block content %}
 
+
 <h2>Quiz {{ quiz.title }}</h2>
 
-<div class="quiz-explanation">
-    {% load linkify %}
-    {{ quiz.explanation|linebreaks|urlize_blank }}
-</div>
+<div class="quiz-header">
 
-<div class="link-edit-quiz">
-    <a href="{% url 'quiz:edit_quiz' quiz.id %}">Titel und Erklärung bearbeiten</a>
+    <div class="quiz-explanation">
+        {% load linkify %}
+        {{ quiz.explanation|linebreaks|urlize_blank }}
+    </div>
+
+    <div class="quiz-edit-link">
+        <a href="{% url 'quiz:edit_quiz' quiz.id %}">Titel und Erklärung bearbeiten</a>
+    </div>
+
 </div>
 
 {% for question in questions %}

@@ -19,17 +19,20 @@
 
 <h2>Quiz bearbeiten:</h2>
 
-<div class="new-quiz-form">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_div }}
-        <button type="submit">Bearbeiten</button>
-    </form>
-</div>
 
-<div class="link-edit-quiz">
-    <a href="{% url 'quiz:new_question' quiz.id %}">Verwerfen</a>
-</div>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <div class="quiz-edit-menu">
+        <div class="quiz-explanation">
+            <button type="submit">Bearbeiten</button>
+        </div>
+        <div class="quiz-edit-link">
+            <a href="{% url 'quiz:new_question' quiz.id %}">Verwerfen</a>
+        </div>
+    </div>
+</form>
 
 
 
