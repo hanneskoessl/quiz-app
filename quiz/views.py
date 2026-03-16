@@ -44,34 +44,30 @@ def quiz(request, quiz_id):
 
             for question in questions:
                                 
-                selected_qs = form.cleaned_data.get(
-                    f"question_{question.id}", 
-                    question.options.none()
-                )
-
                 selected_ids = set(
-                    selected_qs.values_list("id", flat=True)
+                    map(int, form.cleaned_data.get(f"question_{question.id}", []))
                 )
 
-                correct_ids = set(
-                    question.options
-                    .filter(is_correct=True)
-                    .values_list("id", flat=True)
-                )
+                correct_ids = {
+                    option.id
+                    for option in question.options.all()
+                    if option.is_correct
+                }
                 
                 is_question_correct = selected_ids == correct_ids
 
                 if is_question_correct:
                     score += 1
 
-                for option in selected_qs:
-                    answers_to_create.append(
-                        Answer(
-                            attempt=attempt,
-                            question=question,
-                            option=option,
+                for option in question.options.all():
+                    if option.id in selected_ids:
+                        answers_to_create.append(
+                            Answer(
+                                attempt=attempt,
+                                question=question,
+                                option=option,
+                            )
                         )
-                    )
                     
             Answer.objects.bulk_create(answers_to_create)
 

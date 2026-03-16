@@ -9,9 +9,11 @@ class QuizForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         for question in questions:
-            self.fields[f"question_{question.id}"] = forms.ModelMultipleChoiceField(
-                queryset=question.options.all(),
+            options = list(question.options.all())
+
+            self.fields[f"question_{question.id}"] = forms.MultipleChoiceField(
                 required=False,
+                choices=[(o.id, o.text) for o in options],
                 widget=forms.CheckboxSelectMultiple,
                 label=question.question,     
             )
