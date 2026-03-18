@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
 from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
-from .models import Answer, Question, Quiz, QuizAttempt, Option
+from .models import Question, Quiz, QuizAttempt, Option
 
 def index(request):
     """The home page for Quiz."""
@@ -40,7 +40,7 @@ def quiz(request, quiz_id):
                 total=total,
             )
 
-            answers_to_create = []
+            snapshot = []
 
             for question in questions:
                                 
@@ -54,23 +54,32 @@ def quiz(request, quiz_id):
                     if option.is_correct
                 }
                 
+                options_data = []
+
+                for option in question.options.all():
+                    options_data.append(
+                        {
+                            "id": option.id,
+                            "text": option.text,
+                            "is_correct": option.is_correct,
+                            "selected": option.id in selected_ids,
+                        }
+                    )
+
+                snapshot.append(
+                    {
+                        "question_id": question.id,
+                        "text": question.question,
+                        "options": options_data,
+                    }
+                )
+
                 is_question_correct = selected_ids == correct_ids
 
                 if is_question_correct:
                     score += 1
 
-                for option in question.options.all():
-                    if option.id in selected_ids:
-                        answers_to_create.append(
-                            Answer(
-                                attempt=attempt,
-                                question=question,
-                                option=option,
-                            )
-                        )
-                    
-            Answer.objects.bulk_create(answers_to_create)
-
+            attempt.snapshot = snapshot
             attempt.score = score
             attempt.save()
 
@@ -92,21 +101,7 @@ def results(request, attempt_id):
 
     quiz = attempt.quiz
     
-    questions = quiz.questions.prefetch_related("options")
-    
-    selected_dict = {}
-
-    for answer in attempt.answers.all():
-        selected_dict.setdefault(answer.question_id, set()).add(answer.option_id)
-
-    for question in questions:
-        for option in question.options.all():
-            option.selected = option.id in selected_dict.get(question.id, set())
-
-    print(selected_dict)
-
     context = {'quiz': quiz,
-               'questions': questions,
                'attempt': attempt,
                }
     return render(request, 'quiz/results.html', context)

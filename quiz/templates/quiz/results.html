@@ -17,19 +17,19 @@
 
 <h2>Ergebnis</h2>
 
-{% for question in questions %}
+{% for question in attempt.snapshot %}
 <div class="question-card">
 
     <div class="question-header">
 
         <div class="question-title">
-            {{ question }}
+            {{ question.text }}
         </div>
 
     </div>
 
     <ul class="option-list">
-        {% for option in question.options.all %}
+        {% for option in question.options %}
 
         <li class="option
             {% if option.selected and option.is_correct %} correct-selected
@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="option-text">
-                    {{ option }}
+                    {{ option.text }}
                 </div>
             </div>
 
