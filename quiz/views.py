@@ -100,9 +100,12 @@ def results(request, attempt_id):
     )
 
     quiz = attempt.quiz
+
+    percentage = round((attempt.score / attempt.total) * 100, 1)
     
     context = {'quiz': quiz,
                'attempt': attempt,
+               "percentage": percentage,
                }
     return render(request, 'quiz/results.html', context)
 
