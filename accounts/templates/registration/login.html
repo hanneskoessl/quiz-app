@@ -1,0 +1,16 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Dein Benutzername und dein Passwort stimmen nicht überein. Bitte versuche es erneut.</p>
+{% endif %}
+
+<form action="{% url 'accounts:login' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_div }}
+
+    <button name="submit">Einloggen</button>
+</form>
+
+{% endblock content %}

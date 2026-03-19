@@ -126,3 +126,6 @@ STATIC_URL = "static/"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+# My settings.
+LOGIN_REDIRECT_URL = "quiz:index"

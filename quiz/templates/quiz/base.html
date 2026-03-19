@@ -21,8 +21,20 @@
             <ul class="nav-links">
                 <li><a href="{% url 'quiz:index' %}">Quizze</a></li>
                 <li><a href="{% url 'quiz:quizzes' %}">Quizze bearbeiten</a></li>
+                <li>
+                    {% if user.is_authenticated %}
+                    Willkommen {{ user.username}}!
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}">Einloggen</a>
+                    {% endif %}
+                </li>
             </ul>
+
         </nav>
+
+
+
+
 
         {% block content %}{% endblock content%}
 
