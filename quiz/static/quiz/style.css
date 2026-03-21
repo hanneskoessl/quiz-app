@@ -39,6 +39,7 @@ body {
 ul, ol{
     list-style: none;
     padding: 0;
+    margin: 5px;
 }
 
 li {
@@ -56,7 +57,7 @@ li {
     background: #2e5d96;
     color: white;
 
-    padding: 10px 18px;
+    padding: 5px 18px;
     margin-bottom: 20px;
 
     border-radius: 8px;
@@ -77,6 +78,8 @@ li {
     border: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    align-items: center;
 }
 
 .nav-links a {
@@ -86,7 +89,23 @@ li {
     transition: background 0.2s ease;
 }
 
-.nav-links a:hover {
+.nav-links form {
+    margin: 0;
+    display: inline;
+}
+
+.nav-links button {
+    
+    border: none;
+    background: none;
+    font: inherit;
+    padding: 6px 10px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nav-links a:hover, .nav-links button:hover {
     background: rgba(255,255,255,0.2);
 }
 
@@ -153,12 +172,6 @@ li {
     width: 30px;
     font-size: 20px;
     text-align: center;
-}
-
-ul li form {
-    display:inline;
-    background-color: red;
-    color: blue;
 }
 
 .option-result {

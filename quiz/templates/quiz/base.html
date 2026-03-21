@@ -28,6 +28,14 @@
                     <a href="{% url 'accounts:login' %}">Einloggen</a>
                     {% endif %}
                 </li>
+                <li>
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'accounts:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button name="submit">Log out</button>
+                    </form>
+                    {% endif %}
+                </li>
             </ul>
 
         </nav>

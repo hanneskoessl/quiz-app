@@ -129,3 +129,4 @@ INTERNAL_IPS = [
 
 # My settings.
 LOGIN_REDIRECT_URL = "quiz:index"
+LOGOUT_REDIRECT_URL = "quiz:index"
