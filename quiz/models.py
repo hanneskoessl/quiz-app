@@ -1,5 +1,7 @@
-from django.db import models
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import models
+
 # Create your models here.
 
 class Difficulty(models.IntegerChoices):
@@ -15,6 +17,7 @@ class Question(models.Model):
     """Question that can be used to create a quiz."""
     question = models.TextField()
     difficulty = models.PositiveSmallIntegerField(choices=Difficulty.choices)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.question[:50]
@@ -35,6 +38,7 @@ class Quiz(models.Model):
     title = models.CharField(max_length=200)
     explanation = models.TextField(blank=True)
     questions = models.ManyToManyField(Question, related_name="quizzes")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -46,6 +50,7 @@ class QuizAttempt(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField()
     total = models.IntegerField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     snapshot = models.JSONField(null=True, blank=True) 
 
