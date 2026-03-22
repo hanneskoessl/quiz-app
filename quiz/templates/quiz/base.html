@@ -25,6 +25,7 @@
                     {% if user.is_authenticated %}
                     Willkommen {{ user.username}}!
                     {% else %}
+                    <a href="{% url 'accounts:register' %}">Anmelden</a>
                     <a href="{% url 'accounts:login' %}">Einloggen</a>
                     {% endif %}
                 </li>
