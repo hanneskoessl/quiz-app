@@ -1,5 +1,11 @@
 {% extends 'quiz/base.html' %}
 
 {% block content %}
+
+{% if user.is_authenticated %}
+Willkommen {{ user.username}}!
+{% endif %}
+
 <p>Mit dieser App kannst du Quizze erstellen, teilen und dein Wissen auf die Probe stellen.</p>
+
 {% endblock content %}

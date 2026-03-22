@@ -19,31 +19,23 @@
             </div>
 
             <ul class="nav-links">
+                {% if not user.is_authenticated %}
+                <li><a href="{% url 'accounts:register' %}">Anmelden</a></li>
+                <li><a href="{% url 'accounts:login' %}">Einloggen</a></li>
+                {% endif %}
+                {% if user.is_authenticated %}
                 <li><a href="{% url 'quiz:index' %}">Quizze</a></li>
                 <li><a href="{% url 'quiz:quizzes' %}">Quizze bearbeiten</a></li>
                 <li>
-                    {% if user.is_authenticated %}
-                    Willkommen {{ user.username}}!
-                    {% else %}
-                    <a href="{% url 'accounts:register' %}">Anmelden</a>
-                    <a href="{% url 'accounts:login' %}">Einloggen</a>
-                    {% endif %}
-                </li>
-                <li>
-                    {% if user.is_authenticated %}
                     <form action="{% url 'accounts:logout' %}" method="post">
                         {% csrf_token %}
                         <button name="submit">Log out</button>
                     </form>
-                    {% endif %}
                 </li>
+                {% endif %}
             </ul>
 
         </nav>
-
-
-
-
 
         {% block content %}{% endblock content%}
 
