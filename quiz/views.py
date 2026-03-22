@@ -1,6 +1,8 @@
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
+
 
 from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
 from .models import Question, Quiz, QuizAttempt, Option
@@ -9,12 +11,14 @@ def index(request):
     """The home page for Quiz."""
     return render(request, "quiz/index.html")
 
+@login_required
 def quizzes(request):
     """Lists all quizzes."""
     quizzes = Quiz.objects.all()
     context = {'quizzes': quizzes}
     return render(request, "quiz/quizzes.html", context)
 
+@login_required
 @transaction.atomic
 def quiz(request, quiz_id):
     """Shows a quiz."""
@@ -92,6 +96,7 @@ def quiz(request, quiz_id):
                }
     return render(request, 'quiz/quiz.html', context)
 
+@login_required
 def results(request, attempt_id):
     """Quiz results."""
     attempt = get_object_or_404(
@@ -109,6 +114,7 @@ def results(request, attempt_id):
                }
     return render(request, 'quiz/results.html', context)
 
+@login_required
 def new_quiz(request):
     """Add a new quiz."""
     if request.method != 'POST':
@@ -122,6 +128,7 @@ def new_quiz(request):
     context = {'form': form}
     return render(request, 'quiz/new_quiz.html', context)
 
+@login_required
 def edit_quiz(request, quiz_id):
     """Edit a quiz."""
 
@@ -147,6 +154,7 @@ def edit_quiz(request, quiz_id):
 
     return render(request, "quiz/edit_quiz.html", context)
 
+@login_required
 def new_question(request, quiz_id):
     """Add a new question."""
     quiz = get_object_or_404(
@@ -189,6 +197,7 @@ def new_question(request, quiz_id):
 
     return render(request, "quiz/new_question.html", context)
 
+@login_required
 def new_option(request, quiz_id, question_id):
     """Add a new question."""
     question = get_object_or_404(
@@ -213,6 +222,7 @@ def new_option(request, quiz_id, question_id):
                }
     return render(request, 'quiz/new_option.html', context)
 
+@login_required
 def delete_quiz(request, quiz_id):
     """Delete a quiz."""
     quiz = get_object_or_404(
@@ -226,6 +236,7 @@ def delete_quiz(request, quiz_id):
 
     return redirect ('quiz:quizzes')
 
+@login_required
 def delete_question(request, quiz_id, question_id):
     """Delete a question."""
     question = get_object_or_404(
@@ -239,6 +250,7 @@ def delete_question(request, quiz_id, question_id):
 
     return redirect ('quiz:new_question', quiz_id=quiz_id)
 
+@login_required
 def remove_question(request, quiz_id, question_id):
     """Remove Question from Quiz."""
     quiz = get_object_or_404(
@@ -258,6 +270,7 @@ def remove_question(request, quiz_id, question_id):
     
     return redirect ('quiz:new_question', quiz_id=quiz_id)
 
+@login_required
 def delete_option(request, quiz_id, question_id, option_id):
     """Delete an option."""
     option = get_object_or_404(
