@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
 
@@ -14,7 +14,7 @@ def index(request):
 @login_required
 def quizzes(request):
     """Lists all quizzes."""
-    quizzes = Quiz.objects.all()
+    quizzes = Quiz.objects.filter(owner=request.user)
     context = {'quizzes': quizzes}
     return render(request, "quiz/quizzes.html", context)
 
@@ -26,6 +26,9 @@ def quiz(request, quiz_id):
         Quiz.objects.prefetch_related("questions__options"),
         id=quiz_id
     )
+
+    if quiz.owner != request.user:
+        raise Http404
     
     questions = quiz.questions.all()
     
@@ -42,6 +45,7 @@ def quiz(request, quiz_id):
                 quiz=quiz,
                 score=0,
                 total=total,
+                owner=request.user,
             )
 
             snapshot = []
@@ -104,6 +108,9 @@ def results(request, attempt_id):
         id=attempt_id
     )
 
+    if attempt.owner != request.user:
+        raise Http404
+
     quiz = attempt.quiz
 
     percentage = round((attempt.score / attempt.total) * 100, 1)
@@ -122,7 +129,9 @@ def new_quiz(request):
     else:
         form = NewQuizForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            new_quiz = form.save(commit=False)
+            new_quiz.owner = request.user
+            new_quiz.save()
             return redirect("quiz:new_question", quiz_id=form.instance.id)
     
     context = {'form': form}
@@ -132,7 +141,14 @@ def new_quiz(request):
 def edit_quiz(request, quiz_id):
     """Edit a quiz."""
 
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    quiz = get_object_or_404(
+        Quiz, 
+        id=quiz_id
+    )
+
+    if quiz.owner != request.user:
+        raise Http404
+
     print(quiz_id, quiz.id)
     print(quiz.id, quiz.title)
     print(quiz.explanation)
@@ -162,6 +178,9 @@ def new_question(request, quiz_id):
         id=quiz_id
     )
 
+    if quiz.owner != request.user:
+        raise Http404
+
     questions = quiz.questions.prefetch_related("options")
 
     if request.method == "POST":
@@ -170,23 +189,29 @@ def new_question(request, quiz_id):
             new_form = NewQuestionForm(request.POST)
 
             if new_form.is_valid():
-                question = new_form.save()
-                quiz.questions.add(question)
+                new_question = new_form.save(commit=False)
+                new_question.owner = request.user
+                new_question.save()
+                quiz.questions.add(new_question)
 
                 return redirect("quiz:new_question", quiz_id=quiz_id)
 
         elif "add_existing" in request.POST:
-            existing_form = AddExistingQuestionForm(request.POST)
+            existing_form = AddExistingQuestionForm(request.POST, user=request.user)
 
             if existing_form.is_valid():
                 question = existing_form.cleaned_data["question"]
+
+                if question.owner != request.user:
+                    raise Http404
+
                 quiz.questions.add(question)
 
                 return redirect("quiz:new_question", quiz_id=quiz_id)
 
     else:
         new_form = NewQuestionForm()
-        existing_form = AddExistingQuestionForm()
+        existing_form = AddExistingQuestionForm(user=request.user)
 
     context = {
         "quiz": quiz,
@@ -204,6 +229,9 @@ def new_option(request, quiz_id, question_id):
         Question,
         id=question_id
     )
+
+    if question.owner != request.user:
+        raise Http404
 
     if request.method != 'POST':
         form = NewOptionForm()
@@ -230,6 +258,9 @@ def delete_quiz(request, quiz_id):
         id=quiz_id
     )
 
+    if quiz.owner != request.user:
+        raise Http404
+
     if request.method == 'POST':
         quiz.delete()
         return redirect ('quiz:quizzes')
@@ -244,6 +275,9 @@ def delete_question(request, quiz_id, question_id):
         id=question_id
     )
 
+    if question.owner != request.user:
+        raise Http404
+
     if request.method == 'POST':
         question.delete()
         return redirect ('quiz:new_question', quiz_id=quiz_id)
@@ -257,6 +291,9 @@ def remove_question(request, quiz_id, question_id):
         Quiz,
         id=quiz_id
     )
+
+    if quiz.owner != request.user:
+        raise Http404
 
     question = get_object_or_404(
         Question,
@@ -277,6 +314,11 @@ def delete_option(request, quiz_id, question_id, option_id):
         Option,
         id=option_id
     )
+
+    question = option.question
+
+    if question.owner != request.user:
+        raise Http404
 
     if request.method == 'POST':
         option.delete()

@@ -37,9 +37,16 @@ class NewQuestionForm(forms.ModelForm):
 
 class AddExistingQuestionForm(forms.Form):
     question = forms.ModelChoiceField(
-        queryset=Question.objects.all(),
+        queryset=Question.objects.none(),
         label="Vorhandene Frage auswählen"
     )
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['question'].queryset = Question.objects.filter(owner=user)
         
 
 class NewOptionForm(forms.ModelForm):
