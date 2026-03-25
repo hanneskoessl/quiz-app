@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -32,6 +34,10 @@ class Option(models.Model):
     def __str__(self):
         return self.text
 
+class Visibility(models.TextChoices):
+    PRIVATE = "private", "Private"
+    UNLISTED = "unlisted", "Unlisted"
+    SHARED = "shared", "Shared with users"
 
 class Quiz(models.Model):
     """Quiz"""
@@ -39,6 +45,20 @@ class Quiz(models.Model):
     explanation = models.TextField(blank=True)
     questions = models.ManyToManyField(Question, related_name="quizzes")
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    visibility = models.CharField(
+        max_length=10,
+        choices=Visibility.choices,
+        default=Visibility.PRIVATE
+    )
+
+    share_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+
+    allowed_users = models.ManyToManyField(
+        User,
+        blank=True,
+        related_name="shared_quizzes"
+    )
 
     def __str__(self):
         return self.title

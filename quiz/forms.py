@@ -22,9 +22,11 @@ class QuizForm(forms.Form):
 class NewQuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['title', 'explanation']
+        fields = ['title', 'explanation', 'visibility', 'allowed_users']
         labels = {'title': '',
-                  'explanation': ''}
+                  'explanation': '',
+                  'visibility': '', 
+                  'allowed_users': ''}
 
 
 class NewQuestionForm(forms.ModelForm):

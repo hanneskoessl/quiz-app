@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 
 from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
 from .models import Question, Quiz, QuizAttempt, Option
+from .utils import can_access_quiz
 
 def index(request):
     """The home page for Quiz."""
@@ -22,13 +23,18 @@ def quizzes(request):
 @transaction.atomic
 def quiz(request, quiz_id):
     """Shows a quiz."""
+    token = request.GET.get("token")
+
     quiz = get_object_or_404(
         Quiz.objects.prefetch_related("questions__options"),
         id=quiz_id
     )
 
-    if quiz.owner != request.user:
-        raise Http404
+    if not can_access_quiz(request.user, quiz, token):
+        raise Http404()
+
+#    if quiz.owner != request.user:
+#        raise Http404
     
     questions = quiz.questions.all()
     
