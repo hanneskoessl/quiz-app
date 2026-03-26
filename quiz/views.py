@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 
@@ -15,9 +16,19 @@ def index(request):
 @login_required
 def quizzes(request):
     """Lists all quizzes."""
-    quizzes = Quiz.objects.filter(owner=request.user)
+    quizzes = Quiz.objects.filter(
+        Q(owner=request.user) |
+        Q(allowed_users=request.user) & ~Q(visibility="private")
+    ).distinct()
     context = {'quizzes': quizzes}
     return render(request, "quiz/quizzes.html", context)
+
+@login_required
+def edit_quizzes(request):
+    """Lists all quizzes."""
+    quizzes = Quiz.objects.filter(owner=request.user)
+    context = {'quizzes': quizzes}
+    return render(request, "quiz/edit_quizzes.html", context)
 
 @login_required
 @transaction.atomic

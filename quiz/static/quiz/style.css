@@ -238,7 +238,7 @@ li {
     align-items: center;
 }
 
-button, .quiz-edit, .link-new-quiz, .quiz-edit-link {
+button, .quiz-edit, .link-new-quiz, .quiz-edit-link, .quiz-start {
     
     padding: 8px 12px;
 
@@ -256,13 +256,13 @@ button, .quiz-edit, .link-new-quiz, .quiz-edit-link {
     width: 180px;
 }
 
-.quiz-edit a, .link-new-quiz a, .quiz-edit-link a {
+.quiz-edit a, .link-new-quiz a, .quiz-edit-link a, .quiz-start a{
     display: block;
     color: white;
     font-size: 15px;
 }
 
-button:hover, .quiz-edit:hover, .link-new-quiz:hover, .quiz-edit-link:hover{
+button:hover, .quiz-edit:hover, .link-new-quiz:hover, .quiz-edit-link:hover, .quiz-start:hover{
     background: #1a3556;
 }
 

@@ -1,0 +1,53 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+
+<h2>Quizze</h2>
+
+<ul class="quizzes-list">
+    {% for quiz in quizzes %}
+
+    <li class="quiz-item">
+
+        <div class="quiz-row-left">
+
+            <div class="quiz-title">
+                <a href="{% url 'quiz:quiz' quiz.id%}">{{ quiz.title }}</a>
+            </div>
+
+        </div>
+
+        <div class="quiz-row-right">
+
+            <div class="quiz-edit">
+
+                <a href="{% url 'quiz:new_question' quiz.id%}">
+                    Quiz bearbeiten
+                </a>
+
+            </div>
+
+            <div class="form-delete-quiz">
+
+                <form action="{% url 'quiz:delete_quiz' quiz.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Quiz wirklich löschen?');">
+                        Quiz löschen
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </li>
+    {% empty %}
+    <li class="quiz-item">
+        Noch kein Quiz vorhanden.
+    </li>
+    {% endfor %}
+</ul>
+
+<div class="link-new-quiz">
+    <a href="{% url 'quiz:new_quiz' %}">Neuen Quiz erstellen</a>
+</div>
+
+{% endblock content %}
