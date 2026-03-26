@@ -100,6 +100,10 @@
             Frage hinzufügen
         </button>
     </form>
+
+    <div class="quiz-edit-link">
+        <a href="{% url 'quiz:edit_quiz' quiz.id%}">Fertig</a>
+    </div>
 </div>
 
 {% endblock %}

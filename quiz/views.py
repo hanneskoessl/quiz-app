@@ -186,7 +186,6 @@ def edit_quiz(request, quiz_id):
 
         if form.is_valid():
             form.save()
-            return redirect("quiz:new_question", quiz_id=quiz.id)
 
     else:
         form = NewQuizForm(instance=quiz)
