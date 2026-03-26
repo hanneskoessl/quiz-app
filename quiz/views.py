@@ -3,7 +3,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
-
+from django.urls import reverse
 
 from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
 from .models import Question, Quiz, QuizAttempt, Option
@@ -61,7 +61,7 @@ def quiz(request, quiz_id):
                 quiz=quiz,
                 score=0,
                 total=total,
-                owner=request.user,
+                owner=request.user if request.user.is_authenticated else None,
             )
 
             snapshot = []
@@ -107,7 +107,14 @@ def quiz(request, quiz_id):
             attempt.score = score
             attempt.save()
 
-            return redirect("quiz:results", attempt_id=attempt.id)        
+            url = reverse("quiz:results", args=[attempt.id])
+
+            
+            if not request.user.is_authenticated:
+                token = attempt.token
+                url += f"?token={token}"
+
+            return redirect(url)        
     else:
         form = QuizForm(questions=quiz.questions.all())
 
@@ -118,17 +125,20 @@ def quiz(request, quiz_id):
 
 def results(request, attempt_id):
     """Quiz results."""
+    token = request.GET.get("token")
+
     attempt = get_object_or_404(
         QuizAttempt,
         id=attempt_id
     )
 
-    token = request.GET.get("token")
-
-    if not can_access_quiz(request.user, quiz, token):
-        raise Http404()
-
     quiz = attempt.quiz
+
+    if not (
+        attempt.owner == request.user or
+        (token and str(attempt.token) == str(token))
+    ):
+        raise Http404()
 
     percentage = round((attempt.score / attempt.total) * 100, 1)
     

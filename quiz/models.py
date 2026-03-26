@@ -75,9 +75,16 @@ class QuizAttempt(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField()
     total = models.IntegerField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     snapshot = models.JSONField(null=True, blank=True) 
+
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+
+    def get_result_link(self, request):
+        return request.build_absolute_uri(
+            f"/results/{self.id}/?token={self.token}"
+        )
 
     def __str__(self):
         return f"Attemp {self.id} - {self.score}/{self.total}" 
