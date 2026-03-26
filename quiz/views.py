@@ -141,10 +141,13 @@ def results(request, attempt_id):
         raise Http404()
 
     percentage = round((attempt.score / attempt.total) * 100, 1)
+
+    share_link = attempt.get_share_link(request)
     
     context = {'quiz': quiz,
                'attempt': attempt,
-               "percentage": percentage,
+               'percentage': percentage,
+               'share_link': share_link,
                }
     return render(request, 'quiz/results.html', context)
 

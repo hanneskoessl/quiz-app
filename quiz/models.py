@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -61,9 +62,8 @@ class Quiz(models.Model):
     )
 
     def get_share_link(self, request):
-        return request.build_absolute_uri(
-            f"/quiz/{self.id}/?token={self.share_token}"
-        )
+        url = reverse("quiz:quiz", args=[self.id])
+        return request.build_absolute_uri(f"{url}?token={self.share_token}")
 
     def __str__(self):
         return self.title
@@ -80,11 +80,10 @@ class QuizAttempt(models.Model):
     snapshot = models.JSONField(null=True, blank=True) 
 
     token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-
-    def get_result_link(self, request):
-        return request.build_absolute_uri(
-            f"/results/{self.id}/?token={self.token}"
-        )
+    
+    def get_share_link(self, request):
+        url = reverse("quiz:results", args=[self.id])
+        return request.build_absolute_uri(f"{url}?token={self.token}")
 
     def __str__(self):
         return f"Attemp {self.id} - {self.score}/{self.total}" 

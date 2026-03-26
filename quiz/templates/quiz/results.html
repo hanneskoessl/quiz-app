@@ -82,5 +82,16 @@
 
     </div>
     {% endfor %}
+
+
+    <div class="share-box">
+        <h3>Ergebnis teilen</h3>
+
+        <input type="text" id="shareLink" value="{{ share_link }}" readonly>
+
+        <button id="copyBtn" onclick="copyLink()">Link kopieren</button>
+    </div>
+
+
 </div>
 {% endblock %}
