@@ -60,6 +60,11 @@ class Quiz(models.Model):
         related_name="shared_quizzes"
     )
 
+    def get_share_link(self, request):
+        return request.build_absolute_uri(
+            f"/quiz/{self.id}/?token={self.share_token}"
+        )
+
     def __str__(self):
         return self.title
 

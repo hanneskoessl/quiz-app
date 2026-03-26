@@ -12,8 +12,3 @@ def can_access_quiz(user, quiz, token=None):
         return True
 
     return False
-
-def get_share_link(self, request):
-    return request.build_absolute_uri(
-        f"/quiz/{self.id}/?token={self.share_token}"
-    )

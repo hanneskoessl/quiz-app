@@ -30,7 +30,6 @@ def edit_quizzes(request):
     context = {'quizzes': quizzes}
     return render(request, "quiz/edit_quizzes.html", context)
 
-@login_required
 @transaction.atomic
 def quiz(request, quiz_id):
     """Shows a quiz."""
@@ -117,7 +116,6 @@ def quiz(request, quiz_id):
                }
     return render(request, 'quiz/quiz.html', context)
 
-@login_required
 def results(request, attempt_id):
     """Quiz results."""
     attempt = get_object_or_404(
@@ -125,8 +123,10 @@ def results(request, attempt_id):
         id=attempt_id
     )
 
-    if attempt.owner != request.user:
-        raise Http404
+    token = request.GET.get("token")
+
+    if not can_access_quiz(request.user, quiz, token):
+        raise Http404()
 
     quiz = attempt.quiz
 
@@ -166,9 +166,7 @@ def edit_quiz(request, quiz_id):
     if quiz.owner != request.user:
         raise Http404
 
-    print(quiz_id, quiz.id)
-    print(quiz.id, quiz.title)
-    print(quiz.explanation)
+    share_link = quiz.get_share_link(request)
 
     if request.method == "POST":
         form = NewQuizForm(request.POST, instance=quiz)
@@ -183,6 +181,7 @@ def edit_quiz(request, quiz_id):
     context = {
         "quiz": quiz,
         "form": form,
+        "share_link": share_link,
     }
 
     return render(request, "quiz/edit_quiz.html", context)

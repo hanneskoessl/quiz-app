@@ -24,12 +24,28 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_div }}
+
+    {% if quiz.visibility == "unlisted" %}
+    <div class="share-box">
+        <label>Share link:</label>
+
+        <input type="text" value="{{ share_link }}" readonly id="shareLink">
+
+        <button onclick="copyLink()">Copy</button>
+    </div>
+    {% else %}
+    <p>Link sharing disabled</p>
+    {% endif %}
+
     <div class="quiz-edit-menu">
         <div class="quiz-explanation">
-            <button type="submit">Bearbeiten</button>
+            <button type="submit">Speichern</button>
         </div>
         <div class="quiz-edit-link">
-            <a href="{% url 'quiz:new_question' quiz.id %}">Verwerfen</a>
+            <a href="{% url 'quiz:new_question' quiz.id %}">Fragen bearbeiten</a>
+        </div>
+        <div class="quiz-edit-link">
+            <a href="{% url 'quiz:edit_quizzes' %}">Verwerfen</a>
         </div>
     </div>
 </form>
