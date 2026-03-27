@@ -61,6 +61,9 @@ class Quiz(models.Model):
         related_name="shared_quizzes"
     )
 
+    def is_link_sharing_enabled(self):
+        return self.visibility == Visibility.UNLISTED
+
     def get_share_link(self, request):
         url = reverse("quiz:quiz", args=[self.id])
         return request.build_absolute_uri(f"{url}?token={self.share_token}")

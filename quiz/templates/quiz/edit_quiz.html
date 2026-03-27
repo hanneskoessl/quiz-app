@@ -25,16 +25,16 @@
     {% csrf_token %}
     {{ form.as_div }}
 
-    {% if quiz.visibility == "unlisted" %}
+    {% if quiz.is_link_sharing_enabled %}
     <div class="share-box">
-        <label>Share link:</label>
+        <label>Link teilen:</label>
 
         <input type="text" value="{{ share_link }}" readonly id="shareLink">
 
-        <button type="button" onclick="copyLink()">Copy</button>
+        <button type="button" onclick="copyLink()">Kopieren</button>
     </div>
     {% else %}
-    <p>Link sharing disabled</p>
+    <p>Linkfreigabe deaktiviert</p>
     {% endif %}
 
     <div class="quiz-edit-menu">

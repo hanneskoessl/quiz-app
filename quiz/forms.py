@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Option, Question, Quiz
+from .models import Option, Question, Quiz, Visibility
 
 class QuizForm(forms.Form):
 
@@ -20,13 +20,35 @@ class QuizForm(forms.Form):
 
 
 class NewQuizForm(forms.ModelForm):
+    link_sharing = forms.BooleanField(required=False, label="Linkfreigabe aktivieren")
+
     class Meta:
         model = Quiz
-        fields = ['title', 'explanation', 'visibility', 'allowed_users']
+        fields = ['title', 'explanation']
         labels = {'title': '',
-                  'explanation': '',
-                  'visibility': '', 
-                  'allowed_users': ''}
+                  'explanation': ''}
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance:
+            self.fields["link_sharing"].initial = (
+                self.instance.visibility == Visibility.UNLISTED
+            )
+
+    def save(self, commit=True):
+        quiz = super().save(commit=False)
+
+        if self.cleaned_data.get("link_sharing"):
+            quiz.visibility = Visibility.UNLISTED
+        else:
+            quiz.visibility = Visibility.PRIVATE
+
+        if commit:
+            quiz.save()
+            self.save_m2m()
+
+        return quiz
 
 
 class NewQuestionForm(forms.ModelForm):

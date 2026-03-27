@@ -179,8 +179,10 @@ def edit_quiz(request, quiz_id):
     if quiz.owner != request.user:
         raise Http404
 
-    share_link = quiz.get_share_link(request)
-
+    share_link = None
+    if quiz.is_link_sharing_enabled():
+        share_link = quiz.get_share_link(request)
+    
     if request.method == "POST":
         form = NewQuizForm(request.POST, instance=quiz)
 
