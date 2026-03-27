@@ -25,18 +25,6 @@
     {% csrf_token %}
     {{ form.as_div }}
 
-    {% if quiz.is_link_sharing_enabled %}
-    <div class="share-box">
-        <label>Link teilen:</label>
-
-        <input type="text" value="{{ share_link }}" readonly id="shareLink">
-
-        <button type="button" onclick="copyLink()">Kopieren</button>
-    </div>
-    {% else %}
-    <p>Linkfreigabe deaktiviert</p>
-    {% endif %}
-
     <div class="quiz-edit-menu">
         <div class="quiz-explanation">
             <button type="submit">Speichern</button>
@@ -54,6 +42,16 @@
 
     </div>
 </form>
+
+{% if quiz.is_link_sharing_enabled %}
+<div class="share-box">
+    <label>Link teilen:</label>
+
+    <input type="text" value="{{ share_link }}" readonly id="shareLink">
+
+    <button type="button" onclick="copyLink()">Kopieren</button>
+</div>
+{% endif %}
 
 
 

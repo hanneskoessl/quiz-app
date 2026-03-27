@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 from .models import Option, Question, Quiz, Visibility
 
@@ -21,6 +23,11 @@ class QuizForm(forms.Form):
 
 class NewQuizForm(forms.ModelForm):
     link_sharing = forms.BooleanField(required=False, label="Linkfreigabe aktivieren")
+    share_with_user = forms.CharField(
+        required=False,
+        label="Benutzer freigeben",
+        help_text="Benutzernamen eingeben"
+    )
 
     class Meta:
         model = Quiz
@@ -36,13 +43,24 @@ class NewQuizForm(forms.ModelForm):
                 self.instance.visibility == Visibility.UNLISTED
             )
 
+    def clean_share_with_user(self):
+        username = self.cleaned_data.get("share_with_user")
+        
+        if not username:
+            return None
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise ValidationError("User existiert nicht")
+
+        return user
+
     def save(self, commit=True):
         quiz = super().save(commit=False)
 
         if self.cleaned_data.get("link_sharing"):
             quiz.visibility = Visibility.UNLISTED
-        else:
-            quiz.visibility = Visibility.PRIVATE
 
         if commit:
             quiz.save()

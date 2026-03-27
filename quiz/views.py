@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 
 from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
-from .models import Question, Quiz, QuizAttempt, Option
+from .models import Question, Quiz, QuizAttempt, Option, Visibility
 from .utils import can_access_quiz
 
 def index(request):
@@ -162,6 +162,13 @@ def new_quiz(request):
             new_quiz = form.save(commit=False)
             new_quiz.owner = request.user
             new_quiz.save()
+            form.save_m2m()
+            user = form.cleaned_data.get("share_with_user")
+            if user:
+                new_quiz.allowed_users.add(user)
+                if new_quiz.visibility != Visibility.UNLISTED:
+                    new_quiz.visibility = Visibility.SHARED
+                    new_quiz.save()
             return redirect("quiz:new_question", quiz_id=form.instance.id)
     
     context = {'form': form}
@@ -188,7 +195,7 @@ def edit_quiz(request, quiz_id):
 
         if form.is_valid():
             form.save()
-
+            return redirect("quiz:edit_quiz", quiz_id=quiz_id)
     else:
         form = NewQuizForm(instance=quiz)
 
@@ -293,9 +300,9 @@ def delete_quiz(request, quiz_id):
 
     if request.method == 'POST':
         quiz.delete()
-        return redirect ('quiz:quizzes')
+        return redirect ('quiz:edit_quizzes')
 
-    return redirect ('quiz:quizzes')
+    return redirect ('quiz:edit_quizzes')
 
 @login_required
 def delete_question(request, quiz_id, question_id):
