@@ -32,8 +32,8 @@ class NewQuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
         fields = ['title', 'explanation']
-        labels = {'title': '',
-                  'explanation': ''}
+        labels = {'title': 'Titel:',
+                  'explanation': 'Erklärung:'}
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,9 +62,15 @@ class NewQuizForm(forms.ModelForm):
         if self.cleaned_data.get("link_sharing"):
             quiz.visibility = Visibility.UNLISTED
 
-        if commit:
-            quiz.save()
-            self.save_m2m()
+        if commit: 
+            quiz.save() 
+            self.save_m2m() 
+            user = self.cleaned_data.get("share_with_user") 
+            if user: 
+                quiz.allowed_users.add(user) 
+                if quiz.visibility != Visibility.UNLISTED: 
+                    quiz.visibility = Visibility.SHARED 
+                    quiz.save()
 
         return quiz
 
