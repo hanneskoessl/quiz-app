@@ -15,31 +15,48 @@
 
 {% block content %}
 
-<h2>Quiz {{ quiz.title }}</h2>
+<h2 class="page-title">Quiz bearbeiten: {{ quiz.title }}</h2>
 
-<h2>Quiz bearbeiten:</h2>
-
-
-
-<form method="post">
+<form method="post" class="quiz-form">
     {% csrf_token %}
-    {{ form.as_div }}
 
-    <div class="quiz-edit-menu">
-        <div class="quiz-explanation">
-            <button type="submit">Speichern</button>
-        </div>
+    <div class="form-group">
+        {{ form.title.label_tag }}
+        {{ form.title }}
+    </div>
 
-        <div class="quiz-edit-link">
-            <a href="{% url 'quiz:new_question' quiz.id %}">Fragen bearbeiten</a>
-        </div>
-        <div class="quiz-edit-link">
-            <a href="{% url 'quiz:edit_quizzes' %}">Verwerfen</a>
-        </div>
-        <div class="quiz-edit-link">
-            <a href="{% url 'quiz:edit_quizzes' %}">Fertig</a>
-        </div>
+    <div class="form-group">
+        {{ form.explanation.label_tag }}
+        {{ form.explanation }}
+    </div>
 
+    <div class="form-group checkbox-group">
+        {{ form.link_sharing }}
+        {{ form.link_sharing.label_tag }}
+    </div>
+
+    <div class="form-group">
+        {{ form.share_with_user.label_tag }}
+        {{ form.share_with_user }}
+        <div class="form-error">
+            {{ form.share_with_user.errors }}
+        </div>
+    </div>
+
+    <div class="quiz-actions">
+        <button type="submit" class="btn primary">Speichern</button>
+
+        <a href="{% url 'quiz:new_question' quiz.id %}" class="btn secondary">
+            Fragen bearbeiten
+        </a>
+
+        <a href="{% url 'quiz:edit_quizzes' %}" class="btn danger">
+            Verwerfen
+        </a>
+
+        <a href="{% url 'quiz:edit_quizzes' %}" class="btn success">
+            Fertig
+        </a>
     </div>
 </form>
 
@@ -47,9 +64,12 @@
 <div class="share-box">
     <label>Link teilen:</label>
 
-    <input type="text" value="{{ share_link }}" readonly id="shareLink">
-
-    <button type="button" onclick="copyLink()">Kopieren</button>
+    <div class="share-row">
+        <input type="text" value="{{ share_link }}" readonly id="shareLink">
+        <button type="button" onclick="copyLink()" class="btn small">
+            Kopieren
+        </button>
+    </div>
 </div>
 {% endif %}
 
