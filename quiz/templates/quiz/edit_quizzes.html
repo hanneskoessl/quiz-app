@@ -2,52 +2,52 @@
 
 {% block content %}
 
-<h2>Quizze</h2>
+<h2 class="page-title">Meine Quizze</h2>
 
-<ul class="quizzes-list">
+<div class="quiz-list">
+
     {% for quiz in quizzes %}
+    <div class="quiz-card card">
 
-    <li class="quiz-item">
-
-        <div class="quiz-row-left">
+        <div class="quiz-card-content">
 
             <div class="quiz-title">
-                <a href="{% url 'quiz:quiz' quiz.id%}">{{ quiz.title }}</a>
+                <a href="{% url 'quiz:quiz' quiz.id %}">
+                    {{ quiz.title }}
+                </a>
             </div>
 
-        </div>
+            <div class="quiz-actions">
 
-        <div class="quiz-row-right">
-
-            <div class="quiz-edit">
-
-                <a href="{% url 'quiz:edit_quiz' quiz.id%}">
-                    Quiz bearbeiten
+                <a href="{% url 'quiz:edit_quiz' quiz.id %}" class="btn secondary small">
+                    Bearbeiten
                 </a>
 
-            </div>
-
-            <div class="form-delete-quiz">
-
-                <form action="{% url 'quiz:delete_quiz' quiz.id %}" method="post">
+                <form action="{% url 'quiz:delete_quiz' quiz.id %}" method="post" class="inline-form">
                     {% csrf_token %}
-                    <button type="submit" onclick="return confirm('Quiz wirklich löschen?');">
-                        Quiz löschen
+                    <button type="submit" class="btn danger small" onclick="return confirm('Quiz wirklich löschen?');">
+                        Löschen
                     </button>
                 </form>
 
             </div>
-        </div>
-    </li>
-    {% empty %}
-    <li class="quiz-item">
-        Noch kein Quiz vorhanden.
-    </li>
-    {% endfor %}
-</ul>
 
-<div class="link-new-quiz">
-    <a href="{% url 'quiz:new_quiz' %}">Neuen Quiz erstellen</a>
+        </div>
+
+    </div>
+
+    {% empty %}
+    <div class="card empty-state">
+        Noch kein Quiz vorhanden.
+    </div>
+    {% endfor %}
+
+</div>
+
+<div class="quiz-actions" style="margin-top: 20px;">
+    <a href="{% url 'quiz:new_quiz' %}" class="btn primary">
+        ➕ Neues Quiz erstellen
+    </a>
 </div>
 
 {% endblock content %}

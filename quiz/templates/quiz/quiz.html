@@ -21,32 +21,35 @@
     {{ quiz.explanation|linebreaks|urlize_blank }}
 </div>
 
-<h2>Fragen</h2>
+<h2 class="page-title">Quiz</h2>
 
-<div class="quiz-form">
-    <form method="post">
-        {% csrf_token %}
+<form method="post" class="quiz-form">
+    {% csrf_token %}
 
-        {% for field in form %}
-        <div class="quiz-question">
+    {% for field in form %}
+    <div class="card quiz-question-card">
 
-            <div class="quiz-question-title">
-                {{ field.label }}
-            </div>
-
-            <div class="quiz-options">
-                {{ field }}
-            </div>
-
-            <div class="quiz-errors">
-                {{ field.errors }}
-            </div>
-
+        <div class="quiz-question-title">
+            {{ field.label }}
         </div>
-        {% endfor %}
 
-        <button class="quiz-submit" type="submit">Abgeben</button>
-    </form>
-</div>
+        <div class="quiz-options">
+            {{ field }}
+        </div>
+
+        <div class="form-error">
+            {{ field.errors }}
+        </div>
+
+    </div>
+    {% endfor %}
+
+    <div class="quiz-actions">
+        <button class="btn primary" type="submit">
+            Abgeben
+        </button>
+    </div>
+
+</form>
 
 {% endblock %}

@@ -16,60 +16,53 @@
 {% block content %}
 
 
-<h2>Quiz {{ quiz.title }}</h2>
+<h2 class="page-title">Quiz: {{ quiz.title }}</h2>
 
-<div class="quiz-header">
-
+<div class="quiz-header card">
     <div class="quiz-explanation">
         {% load linkify %}
         {{ quiz.explanation|linebreaks|urlize_blank }}
     </div>
 
-    <div class="quiz-edit-link">
-        <a href="{% url 'quiz:edit_quiz' quiz.id %}">Titel und Erklärung bearbeiten</a>
-    </div>
-
+    <a href="{% url 'quiz:edit_quiz' quiz.id %}" class="btn secondary">
+        Titel & Erklärung bearbeiten
+    </a>
 </div>
 
+
 {% for question in questions %}
-<div class="question-card">
+<div class="question-card card">
 
     <div class="question-header">
-
         <div class="question-title">
             {{ question }}
         </div>
 
         <div class="question-actions">
-
-            <a href="{% url 'quiz:new_option' quiz.id question.id %}">
-                ➕ Antwort hinzufügen
+            <a href="{% url 'quiz:new_option' quiz.id question.id %}" class="btn small secondary">
+                ➕ Antwort
             </a>
 
             <form class="remove-form" action="{% url 'quiz:remove_question' quiz.id question.id %}" method="post">
                 {% csrf_token %}
-                <button class="btn-delete" type="submit">
-                    Frage entfernen
+                <button class="btn danger small" type="submit">
+                    Entfernen
                 </button>
             </form>
-
         </div>
     </div>
 
     <ul class="option-list">
         {% for option in question.options.all %}
-
         <li class="option-item">
-
             <div class="option-row">
+                <span class="option-indicator">
+                    {% if option.is_correct %} ✔ {% endif %}
+                </span>
 
-                <div class="option-indicator">
-                    {% if option.is_correct %} ☑ {% endif %}
-                </div>
-
-                <div class="option-text">
+                <span class="option-text">
                     {{ option }}
-                </div>
+                </span>
             </div>
         </li>
         {% endfor %}
@@ -78,14 +71,23 @@
 </div>
 {% endfor %}
 
-<div class="new-question-form">
+
+<div class="card new-question-section">
 
     <h3>Neue Frage erstellen</h3>
 
-    <form action="{% url 'quiz:new_question' quiz.id %}" method="post">
+    <form action="{% url 'quiz:new_question' quiz.id %}" method="post" class="quiz-form">
         {% csrf_token %}
-        {{ new_form.as_div }}
-        <button type="submit" name="create_question">
+
+        {% for field in new_form %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            <div class="form-error">{{ field.errors }}</div>
+        </div>
+        {% endfor %}
+
+        <button type="submit" name="create_question" class="btn primary">
             Frage erstellen
         </button>
     </form>
@@ -93,16 +95,25 @@
 
     <h3>Vorhandene Frage hinzufügen</h3>
 
-    <form action="{% url 'quiz:new_question' quiz.id %}" method="post">
+    <form action="{% url 'quiz:new_question' quiz.id %}" method="post" class="quiz-form">
         {% csrf_token %}
-        {{ existing_form.as_div }}
-        <button type="submit" name="add_existing">
+
+        {% for field in existing_form %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+        </div>
+        {% endfor %}
+
+        <button type="submit" name="add_existing" class="btn secondary">
             Frage hinzufügen
         </button>
     </form>
 
-    <div class="quiz-edit-link">
-        <a href="{% url 'quiz:edit_quiz' quiz.id%}">Fertig</a>
+    <div class="quiz-actions">
+        <a href="{% url 'quiz:edit_quiz' quiz.id %}" class="btn success">
+            Fertig
+        </a>
     </div>
 </div>
 

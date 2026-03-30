@@ -16,13 +16,42 @@
 
 {% block content %}
 
-<h2>Erstelle einen neue Quiz:</h2>
+<h2 class="page-title">Neues Quiz erstellen</h2>
 
-<div class="new-quiz-form">
-    <form action="{% url 'quiz:new_quiz' %}" method="post">
+<div class="quiz-form-container">
+    <form action="{% url 'quiz:new_quiz' %}" method="post" class="quiz-form">
         {% csrf_token %}
-        {{ form.as_div }}
-        <button name="submit">Erstellen</button>
+
+        <div class="form-group">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+        </div>
+
+        <div class="form-group">
+            {{ form.explanation.label_tag }}
+            {{ form.explanation }}
+        </div>
+
+        <div class="form-group checkbox-group">
+            {{ form.link_sharing }}
+            {{ form.link_sharing.label_tag }}
+        </div>
+
+        <div class="form-group">
+            {{ form.share_with_user.label_tag }}
+            {{ form.share_with_user }}
+            <div class="form-error">
+                {{ form.share_with_user.errors }}
+            </div>
+        </div>
+
+        <div class="quiz-actions">
+            <button type="submit" class="btn primary">Erstellen</button>
+
+            <a href="{% url 'quiz:edit_quizzes' %}" class="btn danger">
+                Abbrechen
+            </a>
+        </div>
     </form>
 </div>
 

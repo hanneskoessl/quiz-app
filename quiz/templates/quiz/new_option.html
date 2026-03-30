@@ -15,60 +15,75 @@
 
 {% block content %}
 
-<h2>Frage</h2>
+<h2 class="page-title">Frage bearbeiten</h2>
 
-
-<div class="question-card">
+<div class="question-card card">
 
     <div class="question-header">
-
         <div class="question-title">
             {{ question }}
         </div>
-
     </div>
 
     <ul class="option-list">
         {% for option in question.options.all %}
-
         <li class="option-item">
 
             <div class="option-row">
 
-                <div class="option-indicator">
-                    {% if option.is_correct %} ☑ {% endif %}
-                </div>
+                <span class="option-indicator">
+                    {% if option.is_correct %} ✔ {% endif %}
+                </span>
 
-                <div class="option-text">
+                <span class="option-text">
                     {{ option }}
-                </div>
+                </span>
 
-                <form action="{% url 'quiz:delete_option' quiz_id question.id option.id%}" method="post">
+                <form action="{% url 'quiz:delete_option' quiz_id question.id option.id %}" method="post"
+                    class="inline-form">
                     {% csrf_token %}
-                    <button type="submit" onclick="return confirm('Antwort wirklich löschen?');">
-                        Antwort löschen
+                    <button type="submit" class="btn danger small"
+                        onclick="return confirm('Antwort wirklich löschen?');">
+                        Löschen
                     </button>
                 </form>
 
             </div>
+
         </li>
         {% endfor %}
     </ul>
 
 </div>
 
-<div class="new-option-form">
-    <form action="{% url 'quiz:new_option' quiz_id question.id %}" method="post">
-        {% csrf_token %}
-        {{ form.as_div }}
-        <button type="submit">Neue Anwort erstellen</button>
-    </form>
-</div>
 
-<div class="link-back">
-    <a href="{% url 'quiz:new_question' quiz_id %}">
-        Frage fertig
-    </a>
+<div class="card new-option-section">
+
+    <h3>Neue Antwort hinzufügen</h3>
+
+    <form action="{% url 'quiz:new_option' quiz_id question.id %}" method="post" class="quiz-form">
+
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            <div class="form-error">{{ field.errors }}</div>
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn primary">
+            Antwort erstellen
+        </button>
+    </form>
+
+    <div class="quiz-actions">
+        <a href="{% url 'quiz:new_question' quiz_id %}" class="btn success">
+            Fertig
+        </a>
+    </div>
+
 </div>
 
 {% endblock %}

@@ -2,38 +2,37 @@
 
 {% block content %}
 
-<h2>Quizze</h2>
+<h2 class="page-title">Quizze</h2>
 
-<ul class="quizzes-list">
+<div class="quiz-list">
+
     {% for quiz in quizzes %}
+    <div class="quiz-card card">
 
-    <li class="quiz-item">
-
-        <div class="quiz-row-left">
+        <div class="quiz-card-content">
 
             <div class="quiz-title">
-                <a href="{% url 'quiz:quiz' quiz.id%}">{{ quiz.title }}</a>
-            </div>
-
-        </div>
-
-        <div class="quiz-row-right">
-
-            <div class="quiz-start">
-
-                <a href="{% url 'quiz:quiz' quiz.id%}">
-                    Quiz starten
+                <a href="{% url 'quiz:quiz' quiz.id %}">
+                    {{ quiz.title }}
                 </a>
+            </div>
 
+            <div class="quiz-actions">
+                <a href="{% url 'quiz:quiz' quiz.id %}" class="btn primary small">
+                    Starten
+                </a>
             </div>
 
         </div>
-    </li>
+
+    </div>
+
     {% empty %}
-    <li class="quiz-item">
+    <div class="card empty-state">
         Noch kein Quiz vorhanden.
-    </li>
+    </div>
     {% endfor %}
-</ul>
+
+</div>
 
 {% endblock content %}

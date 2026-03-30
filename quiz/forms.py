@@ -37,6 +37,7 @@ class NewQuizForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["link_sharing"].label_suffix = ""
 
         if self.instance:
             self.fields["link_sharing"].initial = (
@@ -79,8 +80,8 @@ class NewQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['question', 'difficulty']
-        labels = {'question': '',
-                  'difficulty': ''}
+        labels = {'question': 'Frage',
+                  'difficulty': 'Schwerigkeit'}
         
 
 class AddExistingQuestionForm(forms.Form):
@@ -101,5 +102,5 @@ class NewOptionForm(forms.ModelForm):
     class Meta:
         model = Option
         fields = ['text', 'is_correct']
-        labels = {'text': '',
-                  'is_correct': ''}
+        labels = {'text': 'Text',
+                  'is_correct': 'Antwort ist richtig'}

@@ -1,3 +1,4 @@
+/* ================= RESET ================= */
 *,
 *::before,
 *::after {
@@ -9,46 +10,38 @@ html {
     font-family: 'Open Sans', sans-serif;
 }
 
-a {
-    text-decoration: none;
-    color: #234874;;
-}
-
-a:hover {
-    color: #acbfd4;
-}
-
 body {
     background-color: #acbfd4;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100%;
-    
 }
 
+a {
+    text-decoration: none;
+    color: #234874;
+}
+
+a:hover {
+    color: #1a3556;
+}
+
+/* ================= LAYOUT ================= */
 .panel {
-    background-color: white;
+    background: white;
     border-radius: 10px;
-    padding: 15px 25px;
+    padding: 20px;
     width: 100%;
     max-width: 900px;
     min-height: 500px;
 }
 
-ul, ol{
-    list-style: none;
-    padding: 0;
-    margin: 5px;
+.page-title {
+    margin-bottom: 20px;
 }
 
-li {
-    padding: 8px 12px;
-    margin: 5px 0;
-    border-radius: 5px;
-    border: 3px dashed white;
-}
-
+/* ================= NAVBAR ================= */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -72,235 +65,57 @@ li {
 .nav-links {
     display: flex;
     gap: 15px;
+    align-items: center;
 }
 
 .nav-links li {
-    border: none;
-    padding: 0;
-    margin: 0;
+    list-style: none;
     display: flex;
     align-items: center;
 }
 
-.nav-links a {
-    color: white;
-    padding: 6px 10px;
-    border-radius: 5px;
-    transition: background 0.2s ease;
-}
-
-.nav-links form {
-    margin: 0;
-    display: inline;
-}
-
+/* Links & Buttons gleich behandeln */
+.nav-links a,
 .nav-links button {
-    
-    border: none;
-    background: none;
-    font: inherit;
-    padding: 6px 10px;
     color: white;
+    padding: 6px 10px;
     border-radius: 5px;
+
+    background: none;
+    border: none;
     cursor: pointer;
+    font: inherit;
 }
 
-.nav-links a:hover, .nav-links button:hover {
+/* Hover */
+.nav-links a:hover,
+.nav-links button:hover {
     background: rgba(255,255,255,0.2);
 }
 
+/* Active State (wichtig!) */
 .nav-links a.active {
     background: rgba(255,255,255,0.35);
 }
 
-.option {
-    width: 500px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px;
-    border: 3px solid transparent;
-}
-
-.option-text {
-    flex-grow: 1;
-}
-
-.correct-selected {
-    border-color: green;
-}
-
-.wrong-selected {
-    border-color: red;
-}
-
-.correct-missed {
-    border-style: dashed;
-    border-color: green;
-}
-
-.quiz-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+/* ================= CARD ================= */
+.card {
+    background: white;
     border: 1px solid #ddd;
-    padding: 12px 8px;
-    border-radius: 5px;
-    cursor: pointer;    
-    background: #fafafa;
-}
-
-.quiz-row-left, .quiz-row-right {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-}
-
-.option-row-left, .option-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.quiz-text {
-    flex-grow: 1;
-}
-
-.option-indicator {
-    width: 30px;
-    font-size: 20px;
-    text-align: center;
-}
-
-.option-result {
-    width: 30px;
-    font-size: 20px;
-    text-align: center;
-}
-
-.question-card {
-    border-radius: 5px;
-    border: 1px solid black;
-    padding: 10px;
-    margin: 10px 0;
-}
-
-.question-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    align-items: center;
-}
-
-.question-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.quiz-question {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 15px;
-    background: #fafafa;
-}
-
-.quiz-question-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.quiz-options label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    padding: 6px 8px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.quiz-options label:hover {
-    background: #eef4fb;
-}
-
-.quiz-header, .quiz-edit-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-button, .quiz-edit, .link-new-quiz, .quiz-edit-link, .quiz-start {
-    
-    padding: 8px 12px;
-
-    background: #2e5d96;
-    color: white;
-
-    border: none;
-    border-radius: 5px;
-    font-size: 15px;
-    cursor: pointer;
-}
-
-.link-new-quiz, .quiz-edit-link {
-    
-    width: 180px;
-}
-
-.quiz-edit a, .link-new-quiz a, .quiz-edit-link a, .quiz-start a{
-    display: block;
-    color: white;
-    font-size: 15px;
-}
-
-button:hover, .quiz-edit:hover, .link-new-quiz:hover, .quiz-edit-link:hover, .quiz-start:hover{
-    background: #1a3556;
-}
-
-.quiz-submit {
-    margin-top: 20px;
-    padding: 10px 16px;
-}
-
-.quiz-results {
-    max-width: 700px;
-    margin: auto;
-    font-family: sans-serif;
-}
-
-.quiz-score {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-.quiz-date {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-}
-
-.page-title {
     margin-bottom: 20px;
 }
 
+/* ================= FORM ================= */
 .quiz-form {
-    max-width: 500px;
+    max-width: 600px;
 }
 
 .form-group {
-    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
+    margin-bottom: 15px;
 }
 
 .form-group label {
@@ -308,7 +123,8 @@ button:hover, .quiz-edit:hover, .link-new-quiz:hover, .quiz-edit-link:hover, .qu
     font-weight: 500;
 }
 
-input, textarea {
+input,
+textarea {
     padding: 8px;
     border-radius: 6px;
     border: 1px solid #ccc;
@@ -329,51 +145,200 @@ textarea {
 .form-error {
     color: red;
     font-size: 13px;
-    margin-top: 5px;
 }
 
-/* Buttons */
+/* ================= BUTTONS ================= */
 .btn {
     padding: 8px 14px;
     border-radius: 6px;
-    text-decoration: none;
     border: none;
     cursor: pointer;
     font-size: 14px;
+    text-decoration: none;    
+    display: inline-flex;
+    align-items: center;
+    background-color: #acbfd4;
 }
 
-.btn.primary {
-    background: #4CAF50;
-    color: white;
+.btn.primary { 
+    background: #4CAF50; 
+    color: white; 
 }
 
-.btn.secondary {
-    background: #2196F3;
-    color: white;
+.btn.secondary { 
+    background: #2196F3; 
+    color: white; 
 }
 
-.btn.danger {
-    background: #f44336;
-    color: white;
+.btn.danger { 
+    background: #f44336; 
+    color: white; 
 }
 
-.btn.success {
-    background: #555;
-    color: white;
+.btn.success { 
+    background: #555; 
+    color: white; 
 }
 
 .btn.small {
     padding: 6px 10px;
 }
 
-/* Aktionen */
-.quiz-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
+.btn:hover {
+    opacity: 0.9;
 }
 
+/* ================= QUIZ LIST ================= */
+.quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.quiz-card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quiz-title a {
+    font-weight: 600;
+    color: #333;
+}
+
+.quiz-title a:hover {
+    text-decoration: underline;
+}
+
+.empty-state {
+    text-align: center;
+    color: #777;
+}
+
+/* ================= QUESTIONS ================= */
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.question-title {
+    font-weight: 600;
+}
+
+.question-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ================= OPTIONS ================= */
+.option-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.option-item {
+    padding: 6px 0;
+    border-top: 1px solid #eee;
+}
+
+.option {
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 5px;
+}
+
+.option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.option-left {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.option-text {
+    flex: 1;
+}
+
+.option-indicator,
+.option-result {
+    width: 25px;
+    text-align: center;
+}
+
+/* Zustand */
+.correct-selected { background: #e8f5e9; }
+.wrong-selected { background: #fdecea; }
+.correct-missed { background: #fff8e1; }
+
+/* ================= QUIZ PLAY ================= */
+.quiz-question-card {
+    margin-bottom: 15px;
+}
+
+.quiz-question-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.quiz-options label {
+    display: block;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.quiz-options label:hover {
+    background: #f5f5f5;
+}
+
+.quiz-options input {
+    margin-right: 8px;
+    accent-color: #4CAF50;
+}
+
+.quiz-options input:checked + label,
+.quiz-options label:has(input:checked) {
+    background: #e8f5e9;
+}
+
+.quiz-options input:checked {
+    accent-color: #4CAF50;
+}
+
+/* ================= RESULTS ================= */
+.result-summary {
+    text-align: center;
+}
+
+.quiz-score {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.quiz-percentage {
+    font-size: 20px;
+    color: #4CAF50;
+}
+
+.quiz-date {
+    font-size: 13px;
+    color: #777;
+}
+
+/* ================= SHARE ================= */
 .share-box {
     margin-top: 25px;
     padding: 15px;
@@ -385,15 +350,20 @@ textarea {
 .share-row {
     display: flex;
     gap: 10px;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .share-row input {
     flex: 1;
 }
 
+/* ================= UTIL ================= */
+.quiz-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
 
-
-
-
-
+.inline-form {
+    display: inline;
+}
