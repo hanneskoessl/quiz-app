@@ -37,6 +37,10 @@
 
     </div>
 
+    <div class="explanation">
+        {% load linkify %}
+        {{ quiz.explanation|linebreaks|urlize_blank }}
+    </div>
 
     {% for question in attempt.snapshot %}
     <div class="card question-card">

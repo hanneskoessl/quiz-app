@@ -26,6 +26,7 @@
                 {% endif %}
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'quiz:quizzes' %}">Quizze</a></li>
+                <li><a href="{% url 'quiz:attempts' %}">Ergebnisse</a></li>
                 <li><a href="{% url 'quiz:edit_quizzes' %}">Quizze bearbeiten</a></li>
                 <li>
                     <form action="{% url 'accounts:logout' %}" method="post">

@@ -16,12 +16,12 @@
 
 {% block content %}
 
+<h2 class="page-title">Quiz</h2>
+
 <div class="explanation">
     {% load linkify %}
     {{ quiz.explanation|linebreaks|urlize_blank }}
 </div>
-
-<h2 class="page-title">Quiz</h2>
 
 <form method="post" class="quiz-form">
     {% csrf_token %}

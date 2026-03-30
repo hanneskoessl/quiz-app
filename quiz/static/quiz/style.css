@@ -367,3 +367,49 @@ textarea {
 .inline-form {
     display: inline;
 }
+
+/* ================= ATTEMPTS ================= */
+
+.quiz-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.attempt-list {
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.attempt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.quiz-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.attempt-date {
+    font-size: 13px;
+    color: #777;
+}
+
+.attempt-score-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.attempt-row:hover {
+    background: #f9f9f9;
+}

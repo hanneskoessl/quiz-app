@@ -1,0 +1,58 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+
+<h2 class="page-title">Meine Versuche</h2>
+
+<div class="quiz-list">
+
+    {% for quiz in quizzes %}
+    <div class="quiz-card card">
+
+        <!-- HEADER -->
+        <div class="quiz-card-header">
+            <div class="quiz-title">
+                <a href="{% url 'quiz:quiz' quiz.id %}">
+                    {{ quiz.title }}
+                </a>
+            </div>
+
+            <a href="{% url 'quiz:quiz' quiz.id %}" class="btn secondary small">
+                Erneut versuchen
+            </a>
+        </div>
+
+        <!-- ATTEMPTS -->
+        <div class="attempt-list">
+            {% for attempt in quiz.attempts.all %}
+            <div class="attempt-row">
+
+                <div class="quiz-meta">
+                    <span class="attempt-date">
+                        {{ attempt.created_at|date:"d.m.Y H:i" }}
+                    </span>
+
+                    <span class="attempt-score-badge">
+                        {{ attempt.score }}/{{ attempt.total }}
+                    </span>
+                </div>
+
+                <a href="{% url 'quiz:results' attempt.id %}" class="btn primary small">
+                    Ansehen
+                </a>
+
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    {% empty %}
+    <div class="card empty-state">
+        Noch kein Quiz vorhanden.
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock content %}

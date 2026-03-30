@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
@@ -362,3 +362,18 @@ def delete_option(request, quiz_id, question_id, option_id):
         return redirect ('quiz:new_option', quiz_id=quiz_id, question_id=question_id)
 
     return redirect ('quiz:new_option', quiz_id=quiz_id, question_id=question_id)
+
+@login_required
+def attempts(request):
+    quizzes = Quiz.objects.filter(
+        Q(owner=request.user) |
+        Q(allowed_users=request.user) & ~Q(visibility="private")
+    ).distinct().prefetch_related(
+        Prefetch(
+            "attempts",
+            queryset=QuizAttempt.objects.filter(owner=request.user),
+        )
+    )
+
+    context = {'quizzes': quizzes}
+    return render(request, "quiz/attempt.html", context)
