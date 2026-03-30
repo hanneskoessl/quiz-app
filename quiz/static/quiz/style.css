@@ -413,3 +413,21 @@ textarea {
 .attempt-row:hover {
     background: #f9f9f9;
 }
+
+/* ================= STATS ================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 22px;
+    font-weight: bold;
+}

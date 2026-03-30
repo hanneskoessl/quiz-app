@@ -17,8 +17,8 @@
                 </a>
             </div>
 
-            <a href="{% url 'quiz:quiz' quiz.id %}" class="btn secondary small">
-                Erneut versuchen
+            <a href="{% url 'quiz:quiz_stats' quiz.id %}" class="btn primary small">
+                Statistik
             </a>
         </div>
 
@@ -44,6 +44,10 @@
             </div>
             {% endfor %}
         </div>
+
+        <a href="{% url 'quiz:quiz' quiz.id %}" class="btn secondary small">
+            Erneut versuchen
+        </a>
 
     </div>
 

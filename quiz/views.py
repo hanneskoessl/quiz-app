@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Prefetch, Q
+from django.db.models import Avg, Max, Count
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
@@ -377,3 +378,28 @@ def attempts(request):
 
     context = {'quizzes': quizzes}
     return render(request, "quiz/attempt.html", context)
+
+def quiz_stats(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+
+    attempts = QuizAttempt.objects.filter(
+        Q(quiz=quiz) & Q(owner=request.user)
+    ).order_by("created_at")
+
+    stats = attempts.aggregate(
+        total_attempts=Count("id"),
+        avg_score=Avg("score"),
+        best_score=Max("score"),
+    )
+
+    scores = list(attempts.values_list("score", flat=True))
+    dates = [a.created_at.strftime("%d.%m") for a in attempts]
+
+    context = {
+        "quiz": quiz,
+        "stats": stats,
+        "scores": scores,
+        "dates": dates,
+    }
+
+    return render(request, "quiz/quiz_stats.html", context)

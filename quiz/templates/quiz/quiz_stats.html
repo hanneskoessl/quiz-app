@@ -1,0 +1,59 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+
+<h2 class="page-title">Statistik: {{ quiz.title }}</h2>
+
+<!-- STATS -->
+<div class="stats-grid">
+
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_attempts }}</div>
+        <div class="stat-label">Versuche</div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.avg_score|floatformat:1 }}</div>
+        <div class="stat-label">Ø Score</div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.best_score }}</div>
+        <div class="stat-label">Bestes Ergebnis</div>
+    </div>
+
+</div>
+
+<!-- CHART -->
+<div class="card">
+    <h3>Score Verlauf</h3>
+    <canvas id="scoreChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('scoreChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ dates| safe }},
+        datasets: [{
+            label: 'Score',
+            data: {{ scores| safe }},
+        tension: 0.3
+        }]
+    }
+});
+</script>
+
+
+{% endblock %}
