@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2 class="page-title">Meine Versuche</h2>
+<h2 class="page-title">Versuche freigegebener Quizzes</h2>
 
 <div class="quiz-list">
 
@@ -35,6 +35,10 @@
                     <span class="attempt-score-badge">
                         {{ attempt.score }}/{{ attempt.total }}
                     </span>
+
+                    <span class="attempt-user">
+                        {{ attempt.owner }}
+                    </span>
                 </div>
 
                 <a href="{% url 'quiz:results' attempt.id %}" class="btn primary small">
@@ -45,10 +49,6 @@
             {% endfor %}
         </div>
 
-        <a href="{% url 'quiz:quiz' quiz.id %}" class="btn secondary small">
-            Erneut versuchen
-        </a>
-
     </div>
 
     {% empty %}
@@ -56,15 +56,6 @@
         Noch kein Quiz vorhanden.
     </div>
     {% endfor %}
-
-    <h2 class="page-title">Versuche freigegebener Quizzes</h2>
-
-    <div>
-        <a href="{% url 'quiz:students_attempts' %}" class="btn secondary small">
-            Ansehen
-        </a>
-    </div>
-
 
 </div>
 

@@ -410,6 +410,11 @@ textarea {
     font-weight: 600;
 }
 
+.attempt-user {
+    font-size: 14px;
+    color: black;
+}
+
 .attempt-row:hover {
     background: #f9f9f9;
 }

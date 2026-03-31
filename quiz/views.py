@@ -137,7 +137,8 @@ def results(request, attempt_id):
 
     if not (
         attempt.owner == request.user or
-        (token and str(attempt.token) == str(token))
+        (token and str(attempt.token) == str(token)) or
+        quiz.owner == request.user
     ):
         raise Http404()
 
@@ -379,6 +380,7 @@ def attempts(request):
     context = {'quizzes': quizzes}
     return render(request, "quiz/attempt.html", context)
 
+@login_required
 def quiz_stats(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
 
@@ -403,3 +405,17 @@ def quiz_stats(request, quiz_id):
     }
 
     return render(request, "quiz/quiz_stats.html", context)
+
+@login_required
+def students_attempts(request):
+    quizzes = Quiz.objects.filter(
+        Q(owner=request.user)  & ~Q(visibility="private")       
+    ).distinct().prefetch_related(
+        Prefetch(
+            "attempts",
+            queryset=QuizAttempt.objects.filter(~Q(owner=request.user)),
+        )
+    )
+
+    context = {'quizzes': quizzes}
+    return render(request, "quiz/students_attempts.html", context)
