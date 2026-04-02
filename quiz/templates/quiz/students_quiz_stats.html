@@ -1,0 +1,164 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+
+<h2 class="page-title">Statistik: {{ quiz.title }}</h2>
+
+<div class="stats-grid">
+
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_attempts }}</div>
+        <div class="stat-label">Versuche</div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.avg_score|floatformat:1 }}</div>
+        <div class="stat-label">Ø Score</div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.best_score }}</div>
+        <div class="stat-label">Bestes Ergebnis</div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="stat-value">{{ user_data|length }}</div>
+        <div class="stat-label">Teilnehmer</div>
+    </div>
+
+</div>
+
+<div class="card">
+
+    <div class="card-header">
+        <h3>Score Verlauf</h3>
+
+        <select id="userSelect">
+            {% for user in user_data.keys %}
+            <option value="{{ user }}">{{ user }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="userStats" class="user-stats"></div>
+
+    <canvas id="scoreChart"></canvas>
+</div>
+
+
+<div class="card">
+    <h3>Schüler Übersicht</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-left">User</th>
+                <th>Versuche</th>
+                <th>Ø Score</th>
+                <th>Best</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user, stats in user_stats.items %}
+            <tr>
+                <td>{{ user }}</td>
+                <td>{{ stats.total }}</td>
+                <td>{{ stats.avg|floatformat:1 }}</td>
+                <td>{{ stats.best }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{ user_data|json_script:"user-data" }}
+
+<script>
+    const rawData = JSON.parse(document.getElementById('user-data').textContent);
+    const ctx = document.getElementById('scoreChart');
+
+    let chart;
+
+    function getUserStats(attempts) {
+        const scores = attempts.map(a => a.score);
+
+        const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+        const best = Math.max(...scores);
+
+        return {
+            avg: avg.toFixed(1),
+            best: best,
+            total: scores.length
+        };
+    }
+
+    function buildChart(user) {
+        const attempts = rawData[user];
+
+        const labels = attempts.map(a =>
+            new Date(a.date).toLocaleString()
+        );
+
+        const data = attempts.map(a => a.score);
+
+        // 👉 User Stats anzeigen
+        const stats = getUserStats(attempts);
+        document.getElementById("userStats").innerHTML =
+            `Versuche: <b>${stats.total}</b> | Ø: <b>${stats.avg}</b> | Best: <b>${stats.best}</b>`;
+
+        if (chart) chart.destroy();
+
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: user,
+                    data: data,
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `Score: ${context.raw}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Initial
+    const firstUser = Object.keys(rawData)[0];
+    buildChart(firstUser);
+
+    // Wechsel
+    document.getElementById('userSelect').addEventListener('change', function () {
+        buildChart(this.value);
+    });
+</script>
+
+{% endblock %}

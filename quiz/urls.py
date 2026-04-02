@@ -24,4 +24,5 @@ urlpatterns = [
     path("attempts/", views.attempts, name="attempts"),
     path("quiz/<int:quiz_id>/stats/", views.quiz_stats, name="quiz_stats"),
     path("students_attempts/", views.students_attempts, name="students_attempts"),
+    path("quiz/<int:quiz_id>/students_stats/", views.students_quiz_stats, name="students_quiz_stats"),
 ]

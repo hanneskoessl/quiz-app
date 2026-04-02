@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Prefetch, Q
@@ -384,6 +386,9 @@ def attempts(request):
 def quiz_stats(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
 
+    if not can_access_quiz(request.user, quiz):
+        raise Http404()
+
     attempts = QuizAttempt.objects.filter(
         Q(quiz=quiz) & Q(owner=request.user)
     ).order_by("created_at")
@@ -419,3 +424,57 @@ def students_attempts(request):
 
     context = {'quizzes': quizzes}
     return render(request, "quiz/students_attempts.html", context)
+
+@login_required
+def students_quiz_stats(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+
+    if quiz.owner != request.user:
+        raise Http404()
+
+    attempts = QuizAttempt.objects.filter(
+        Q(quiz=quiz) & ~Q(owner=request.user)
+    ).order_by("created_at")
+
+    stats = attempts.aggregate(
+        total_attempts=Count("id"),
+        avg_score=Avg("score"),
+        best_score=Max("score"),
+    )
+
+    recent_attempts = attempts.order_by("created_at")[:20]
+
+    dates = [a.created_at.strftime("%d.%m") for a in recent_attempts]
+    scores = [a.score for a in recent_attempts]
+
+    user_data = defaultdict(list)
+    user_stats = {}
+
+    for attempt in attempts:
+        username = attempt.owner.username if attempt.owner else "Gast"
+
+        user_data[str(username)].append({
+            "date": attempt.created_at.isoformat(),
+            "score": attempt.score
+        })
+
+    for user, attempts_list in user_data.items():
+        scores = [a["score"] for a in attempts_list]
+
+        user_stats[user] = {
+            "total": len(scores),
+            "avg": sum(scores) / len(scores) if scores else 0,
+            "best": max(scores) if scores else 0
+        }
+
+    print(user_data)
+    context = {
+        "quiz": quiz,
+        "stats": stats,
+        "scores": scores,
+        "dates": dates,
+        "user_data": dict(user_data),
+        "user_stats": user_stats,
+    }
+
+    return render(request, "quiz/students_quiz_stats.html", context)
