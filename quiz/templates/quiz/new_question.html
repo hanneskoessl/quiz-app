@@ -15,10 +15,9 @@
 
 {% block content %}
 
-
-<h2 class="page-title">Quiz: {{ quiz.title }}</h2>
-
 <div class="quiz-header card">
+    <h2 class="page-title">Quiz: {{ quiz.title }}</h2>
+
     <div class="quiz-explanation">
         {% load linkify %}
         {{ quiz.explanation|linebreaks|urlize_blank }}

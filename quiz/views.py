@@ -9,7 +9,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 
 from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
-from .models import Question, Quiz, QuizAttempt, Option, Visibility
+from .models import Question, Quiz, QuizAttempt, Option, Visibility, Category
 from .utils import can_access_quiz
 
 def index(request):
@@ -165,6 +165,18 @@ def new_quiz(request):
         if form.is_valid():
             new_quiz = form.save(commit=False)
             new_quiz.owner = request.user
+
+            new_category_name = form.cleaned_data.get("new_category")
+            selected_category = form.cleaned_data.get("category")
+
+            if new_category_name:
+                category, created = Category.objects.get_or_create(
+                    name=new_category_name.strip()
+                )
+                new_quiz.category = category
+            else:
+                new_quiz.category = selected_category
+
             new_quiz.save()
             form.save_m2m()
             user = form.cleaned_data.get("share_with_user")
@@ -198,7 +210,21 @@ def edit_quiz(request, quiz_id):
         form = NewQuizForm(request.POST, instance=quiz)
 
         if form.is_valid():
-            form.save()
+            edit_quiz = form.save(commit=False)
+
+            new_category_name = form.cleaned_data.get("new_category")
+            selected_category = form.cleaned_data.get("category")
+
+            if new_category_name:
+                category, created = Category.objects.get_or_create(
+                    name=new_category_name.strip()
+                )
+                edit_quiz.category = category
+            else:
+                edit_quiz.category = selected_category
+
+            edit_quiz.save()
+            
             return redirect("quiz:edit_quiz", quiz_id=quiz_id)
     else:
         form = NewQuizForm(instance=quiz)

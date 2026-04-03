@@ -29,11 +29,19 @@ class NewQuizForm(forms.ModelForm):
         help_text="Benutzernamen eingeben"
     )
 
+    new_category = forms.CharField(
+        required=False,
+        label="Neue Kategorie",
+        max_length=100
+    )
+
     class Meta:
         model = Quiz
-        fields = ['title', 'explanation']
+        fields = ['title', 'explanation', 'category']
         labels = {'title': 'Titel:',
-                  'explanation': 'Erklärung:'}
+                  'explanation': 'Erklärung:',
+                  'category': 'Kategorie:'
+                  }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

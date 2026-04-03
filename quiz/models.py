@@ -35,10 +35,20 @@ class Option(models.Model):
     def __str__(self):
         return self.text
 
+
 class Visibility(models.TextChoices):
     PRIVATE = "private", "Private"
     UNLISTED = "unlisted", "Unlisted"
     SHARED = "shared", "Shared with users"
+
+
+class Category(models.Model):
+    """Quiz Category"""
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Quiz(models.Model):
     """Quiz"""
@@ -46,6 +56,14 @@ class Quiz(models.Model):
     explanation = models.TextField(blank=True)
     questions = models.ManyToManyField(Question, related_name="quizzes")
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="quizzes"
+    )
 
     visibility = models.CharField(
         max_length=10,
