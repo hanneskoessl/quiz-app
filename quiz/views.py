@@ -159,9 +159,9 @@ def results(request, attempt_id):
 def new_quiz(request):
     """Add a new quiz."""
     if request.method != 'POST':
-        form = NewQuizForm()
+        form = NewQuizForm(user=request.user)
     else:
-        form = NewQuizForm(data=request.POST)
+        form = NewQuizForm(data=request.POST, user=request.user)
         if form.is_valid():
             new_quiz = form.save(commit=False)
             new_quiz.owner = request.user
@@ -171,7 +171,8 @@ def new_quiz(request):
 
             if new_category_name:
                 category, created = Category.objects.get_or_create(
-                    name=new_category_name.strip()
+                    name=new_category_name.strip(),
+                    owner=request.user
                 )
                 new_quiz.category = category
             else:
@@ -207,7 +208,7 @@ def edit_quiz(request, quiz_id):
         share_link = quiz.get_share_link(request)
     
     if request.method == "POST":
-        form = NewQuizForm(request.POST, instance=quiz)
+        form = NewQuizForm(request.POST, instance=quiz, user=request.user)
 
         if form.is_valid():
             edit_quiz = form.save(commit=False)
@@ -217,7 +218,8 @@ def edit_quiz(request, quiz_id):
 
             if new_category_name:
                 category, created = Category.objects.get_or_create(
-                    name=new_category_name.strip()
+                    name=new_category_name.strip(),
+                    owner=request.user
                 )
                 edit_quiz.category = category
             else:
@@ -227,7 +229,7 @@ def edit_quiz(request, quiz_id):
             
             return redirect("quiz:edit_quiz", quiz_id=quiz_id)
     else:
-        form = NewQuizForm(instance=quiz)
+        form = NewQuizForm(instance=quiz, user=request.user)
 
     context = {
         "quiz": quiz,

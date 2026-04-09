@@ -44,7 +44,8 @@ class Visibility(models.TextChoices):
 
 class Category(models.Model):
     """Quiz Category"""
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
