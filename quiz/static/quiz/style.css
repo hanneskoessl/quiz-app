@@ -115,11 +115,6 @@ a:hover {
     transition: 0.2s ease;   
 }
 
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
-
 /* ================= FORM ================= */
 .quiz-form {
     max-width: 600px;
@@ -226,6 +221,27 @@ textarea {
 .empty-state {
     text-align: center;
     color: #777;
+}
+
+.quiz-card-category {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+
+    background: #eef2ff;
+    border: 1px solid #d6dcff;
+    border-left: 5px solid #4a90e2;
+    border-radius: 8px;
+
+    padding: 30px 22px;
+
+    font-weight: 600;
+    
+}
+
+.quiz-card {
+    background-color: white;
 }
 
 /* ================= QUESTIONS ================= */
@@ -544,6 +560,22 @@ tr:hover td {
 
 .table tr:hover td {
     background: #f8fafc;
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.8em;
+}
+
+.badge.own {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge.shared {
+    background: #e2e3e5;
+    color: #383d41;
 }
 
 @media (max-width: 600px) {

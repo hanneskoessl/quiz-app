@@ -6,27 +6,52 @@
 
 <div class="quiz-list">
 
-    {% for quiz in quizzes %}
-    <div class="quiz-card card">
+    {% for category in categories %}
+    <a href="{% url 'quiz:quiz_category' category.id %}" class="quiz-card-category card">
 
         <div class="quiz-card-content">
 
             <div class="quiz-title">
-                <a href="{% url 'quiz:quiz' quiz.id %}">
-                    {{ quiz.title }}
-                </a>
+                {{ category.name }}
             </div>
 
-            <div class="quiz-actions">
-                <a href="{% url 'quiz:quiz' quiz.id %}" class="btn primary small">
-                    Starten
-                </a>
+            <div class="quiz-meta">
+                {% if category.owner == request.user %}
+                <span class="badge own">Deine Kategorie</span>
+                {% else %}
+                <span class="badge shared">
+                    Von {{ category.owner.username }}
+                </span>
+                {% endif %}
             </div>
 
         </div>
 
-    </div>
+    </a>
+    {% endfor %}
 
+    {% for quiz in quizzes %}
+    {% if not quiz.category %}
+    <a href="{% url 'quiz:quiz' quiz.id %}" class="quiz-card card">
+
+        <div class="quiz-card-content">
+
+            <div class="quiz-title">
+                {{ quiz.title }}
+            </div>
+
+            <div class="quiz-meta">
+                {% if quiz.owner == request.user %}
+                <span class="badge own">Dein Quiz</span>
+                {% else %}
+                <span class="badge shared">Von {{ quiz.owner.username }}</span>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </a>
+    {% endif %}
     {% empty %}
     <div class="card empty-state">
         Noch kein Quiz vorhanden.

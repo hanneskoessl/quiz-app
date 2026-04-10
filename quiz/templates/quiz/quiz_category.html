@@ -1,0 +1,44 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+
+<h2 class="page-title">{{category.name}} Quizze</h2>
+
+<div class="quiz-list">
+
+    <div class="quiz-meta">
+        {% if category.owner == request.user %}
+        <span class="badge own">Deine Kategorie</span>
+        {% else %}
+        <span class="badge shared">
+            Von {{ category.owner.username }}
+        </span>
+        {% endif %}
+    </div>
+
+
+    {% for quiz in quizzes %}
+    <a href="{% url 'quiz:quiz' quiz.id %}">
+
+        <div class="quiz-card card">
+
+            <div class="quiz-card-content">
+
+                <div class="quiz-title">
+                    {{ quiz.title }}
+                </div>
+
+            </div>
+
+        </div>
+    </a>
+
+    {% empty %}
+    <div class="card empty-state">
+        Noch kein Quiz vorhanden.
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock content %}

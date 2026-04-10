@@ -23,8 +23,35 @@ def quizzes(request):
         Q(owner=request.user) |
         Q(allowed_users=request.user) & ~Q(visibility="private")
     ).distinct()
-    context = {'quizzes': quizzes}
+    
+    categories = Category.objects.filter(
+        quizzes__in=quizzes
+    ).distinct()
+        
+    context = {'quizzes': quizzes,
+               'categories': categories,
+               }
     return render(request, "quiz/quizzes.html", context)
+
+@login_required
+def quiz_category(request, catagory_id):
+    """Lists all quizzes for a category."""
+    category = get_object_or_404(
+        Category,
+        id=catagory_id
+    )
+    print(category.name)
+
+    quizzes = Quiz.objects.filter(
+        Q(owner=request.user) |
+        Q(allowed_users=request.user) & ~Q(visibility="private"),
+        category=category
+    ).distinct()
+            
+    context = {'quizzes': quizzes,
+               'category': category
+    }
+    return render(request, "quiz/quiz_category.html", context)
 
 @login_required
 def edit_quizzes(request):
