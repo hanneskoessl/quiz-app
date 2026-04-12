@@ -51,6 +51,18 @@ class Category(models.Model):
         return self.name
 
 
+class QuizAccess(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE)
+    shared_at = models.DateTimeField(auto_now_add=True)
+    shared_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="shared_given"
+    )
+
+
 class Quiz(models.Model):
     """Quiz"""
     title = models.CharField(max_length=200)
@@ -76,6 +88,8 @@ class Quiz(models.Model):
 
     allowed_users = models.ManyToManyField(
         User,
+        through="QuizAccess",
+        through_fields=("quiz", "user"),
         blank=True,
         related_name="shared_quizzes"
     )
