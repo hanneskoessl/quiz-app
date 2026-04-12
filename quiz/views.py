@@ -171,7 +171,11 @@ def results(request, attempt_id):
     ):
         raise Http404()
 
-    percentage = round((attempt.score / attempt.total) * 100, 1)
+    if attempt.total > 0:
+        percentage = round((attempt.score / attempt.total) * 100, 1)
+    else:
+        percentage = 0
+
 
     share_link = attempt.get_share_link(request)
     
