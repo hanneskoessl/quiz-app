@@ -103,6 +103,19 @@ class Quiz(models.Model):
         
         url = reverse("quiz:quiz", args=[self.id])
         return request.build_absolute_uri(f"{url}?token={self.share_token}")
+    
+    def share_with(self, user, shared_by=None):
+        access, created = QuizAccess.objects.get_or_create(
+            user=user,
+            quiz=self,
+            defaults={"shared_by": shared_by}
+        )
+
+        if self.visibility != Visibility.UNLISTED:
+            self.visibility = Visibility.SHARED
+            self.save()
+
+        return access
 
     def __str__(self):
         return self.title

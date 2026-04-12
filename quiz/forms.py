@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from .models import Option, Question, Quiz, Visibility, Category
+from .models import Option, Question, Quiz, Visibility, Category, QuizAccess
 
 class QuizForm(forms.Form):
 
@@ -45,6 +45,7 @@ class NewQuizForm(forms.ModelForm):
         
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.request_user = user
         self.fields["link_sharing"].label_suffix = ""
 
         if self.instance:
@@ -77,12 +78,21 @@ class NewQuizForm(forms.ModelForm):
         if commit: 
             quiz.save() 
             self.save_m2m() 
-            user = self.cleaned_data.get("share_with_user") 
-            if user: 
-                quiz.allowed_users.add(user) 
-                if quiz.visibility != Visibility.UNLISTED: 
-                    quiz.visibility = Visibility.SHARED 
-                    quiz.save()
+
+            new_category_name = self.cleaned_data.get("new_category")
+            selected_category = self.cleaned_data.get("category")
+
+            if new_category_name:
+                category, created = Category.objects.get_or_create(
+                    name=new_category_name.strip(),
+                    owner=self.request_user
+                )
+                quiz.category = category
+            else:
+                quiz.category = selected_category
+            
+            quiz.save()
+            self.save_m2m()
 
         return quiz
 
