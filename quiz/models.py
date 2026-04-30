@@ -69,6 +69,7 @@ class Quiz(models.Model):
     explanation = models.TextField(blank=True)
     questions = models.ManyToManyField(Question, related_name="quizzes")
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     category = models.ForeignKey(
         Category,
