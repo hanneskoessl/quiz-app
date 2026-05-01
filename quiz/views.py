@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Prefetch, Q
 from django.db.models import Avg, Max, Count
+from django.db.models.functions import Coalesce
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
+
 
 from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
 from .models import Question, Quiz, QuizAttempt, Option, Visibility, Category, QuizAccess
@@ -22,7 +24,13 @@ def quizzes(request):
     quizzes = Quiz.objects.filter(
         Q(owner=request.user) |
         Q(allowed_users=request.user) & ~Q(visibility="private")
-    ).distinct()
+    ).distinct().annotate(
+        shared_at_user=Max(
+            "quizaccess__shared_at",
+            filter=Q(quizaccess__user=request.user)
+        ),
+        sort_date=Coalesce("shared_at_user", "created_at")
+    ).order_by("sort_date")
     
     categories = Category.objects.filter(
         quizzes__in=quizzes
@@ -46,7 +54,13 @@ def quiz_category(request, catagory_id):
         Q(owner=request.user) |
         Q(allowed_users=request.user) & ~Q(visibility="private"),
         category=category
-    ).distinct()
+    ).distinct().annotate(
+        shared_at_user=Max(
+            "quizaccess__shared_at",
+            filter=Q(quizaccess__user=request.user)
+        ),
+        sort_date=Coalesce("shared_at_user", "created_at")
+    ).order_by("sort_date")
             
     context = {'quizzes': quizzes,
                'category': category
@@ -56,7 +70,11 @@ def quiz_category(request, catagory_id):
 @login_required
 def edit_quizzes(request):
     """Lists all quizzes."""
-    quizzes = Quiz.objects.filter(owner=request.user)
+
+    quizzes = Quiz.objects.filter(    
+        owner=request.user
+    ).order_by("created_at")
+    
     context = {'quizzes': quizzes}
     return render(request, "quiz/edit_quizzes.html", context)
 
@@ -420,7 +438,13 @@ def attempts(request):
     quizzes = Quiz.objects.filter(
         Q(owner=request.user) |
         Q(allowed_users=request.user) & ~Q(visibility="private")
-    ).distinct().prefetch_related(
+    ).distinct().annotate(
+        shared_at_user=Max(
+            "quizaccess__shared_at",
+            filter=Q(quizaccess__user=request.user)
+        ),
+        sort_date=Coalesce("shared_at_user", "created_at")
+    ).order_by("sort_date").prefetch_related(
         Prefetch(
             "attempts",
             queryset=QuizAttempt.objects.filter(owner=request.user),
