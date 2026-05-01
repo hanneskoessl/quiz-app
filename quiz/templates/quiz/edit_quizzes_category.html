@@ -2,26 +2,11 @@
 
 {% block content %}
 
-<h2 class="page-title">Meine Quizze</h2>
+<h2 class="page-title">Meine {{category.name}} Quizze</h2>
 
 <div class="quiz-list">
 
-    {% for category in categories %}
-    <a href="{% url 'quiz:edit_quizzes_category' category.id %}" class="quiz-card-category card">
-
-        <div class="quiz-card-content">
-
-            <div class="quiz-title">
-                {{ category.name }}
-            </div>
-        </div>
-
-    </a>
-    {% endfor %}
-
-
     {% for quiz in quizzes %}
-    {% if not quiz.category %}
     <div class="quiz-card card">
 
         <div class="quiz-card-content">
@@ -50,19 +35,12 @@
         </div>
 
     </div>
-    {% endif %}
     {% empty %}
     <div class="card empty-state">
         Noch kein Quiz vorhanden.
     </div>
     {% endfor %}
 
-</div>
-
-<div class="quiz-actions" style="margin-top: 20px;">
-    <a href="{% url 'quiz:new_quiz' %}" class="btn primary">
-        ➕ Neues Quiz erstellen
-    </a>
 </div>
 
 {% endblock content %}

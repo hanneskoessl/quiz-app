@@ -36,9 +36,10 @@ def quizzes(request):
         quizzes__in=quizzes
     ).distinct()
         
-    context = {'quizzes': quizzes,
-               'categories': categories,
-               }
+    context = {
+        'quizzes': quizzes,
+        'categories': categories,
+    }
     return render(request, "quiz/quizzes.html", context)
 
 @login_required
@@ -48,7 +49,6 @@ def quizzes_category(request, catagory_id):
         Category,
         id=catagory_id
     )
-    print(category.name)
 
     quizzes = Quiz.objects.filter(
         Q(owner=request.user) |
@@ -62,8 +62,9 @@ def quizzes_category(request, catagory_id):
         sort_date=Coalesce("shared_at_user", "created_at")
     ).order_by("sort_date")
             
-    context = {'quizzes': quizzes,
-               'category': category
+    context = {
+        'quizzes': quizzes,
+        'category': category
     }
     return render(request, "quiz/quizzes_category.html", context)
 
@@ -79,11 +80,34 @@ def edit_quizzes(request):
         quizzes__in=quizzes
     ).distinct()
         
-    context = {'quizzes': quizzes,
-               'categories': categories,
-               }
+    context = {
+        'quizzes': quizzes,
+        'categories': categories,
+    }
     
     return render(request, "quiz/edit_quizzes.html", context)
+
+@login_required
+def edit_quizzes_category(request, catagory_id):
+    """Lists all quizzes for a category.."""
+
+    category = get_object_or_404(
+        Category,
+        id=catagory_id
+    )
+
+    quizzes = Quiz.objects.filter(    
+        owner=request.user,
+        category=category
+    ).order_by("created_at")
+
+        
+    context = {
+        'quizzes': quizzes,
+        'category': category
+    }
+    
+    return render(request, "quiz/edit_quizzes_category.html", context)
 
 @transaction.atomic
 def quiz(request, quiz_id):
