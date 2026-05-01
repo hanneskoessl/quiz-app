@@ -12,7 +12,7 @@ from django.urls import reverse
 
 from .forms import QuizForm, NewQuizForm, NewQuestionForm, NewOptionForm, AddExistingQuestionForm
 from .models import Question, Quiz, QuizAttempt, Option, Visibility, Category, QuizAccess
-from .utils import can_access_quiz
+from .utils import can_access_quiz, can_access_category
 
 def index(request):
     """The home page for Quiz."""
@@ -61,6 +61,11 @@ def quizzes_category(request, catagory_id):
         ),
         sort_date=Coalesce("shared_at_user", "created_at")
     ).order_by("sort_date")
+
+    has_quizzes = quizzes.exists()
+
+    if not can_access_category(request.user, category, has_quizzes):
+        raise Http404()
             
     context = {
         'quizzes': quizzes,
@@ -101,6 +106,8 @@ def edit_quizzes_category(request, catagory_id):
         category=category
     ).order_by("created_at")
 
+    if not can_access_category(request.user, category):
+        raise Http404()
         
     context = {
         'quizzes': quizzes,
@@ -121,10 +128,7 @@ def quiz(request, quiz_id):
 
     if not can_access_quiz(request.user, quiz, token):
         raise Http404()
-
-#    if quiz.owner != request.user:
-#        raise Http404
-    
+   
     questions = quiz.questions.all()
     
     if request.method == "POST":

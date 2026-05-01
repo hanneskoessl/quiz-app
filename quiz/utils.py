@@ -12,3 +12,13 @@ def can_access_quiz(user, quiz, token=None):
         return True
 
     return False
+
+
+def can_access_category(user, category, has_quizzes=False):
+    if category.owner == user:
+        return True
+    
+    if has_quizzes:
+        return True
+    
+    return False
