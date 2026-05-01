@@ -42,7 +42,7 @@ def quizzes(request):
     return render(request, "quiz/quizzes.html", context)
 
 @login_required
-def quiz_category(request, catagory_id):
+def quizzes_category(request, catagory_id):
     """Lists all quizzes for a category."""
     category = get_object_or_404(
         Category,
@@ -65,7 +65,7 @@ def quiz_category(request, catagory_id):
     context = {'quizzes': quizzes,
                'category': category
     }
-    return render(request, "quiz/quiz_category.html", context)
+    return render(request, "quiz/quizzes_category.html", context)
 
 @login_required
 def edit_quizzes(request):
@@ -74,8 +74,15 @@ def edit_quizzes(request):
     quizzes = Quiz.objects.filter(    
         owner=request.user
     ).order_by("created_at")
+
+    categories = Category.objects.filter(
+        quizzes__in=quizzes
+    ).distinct()
+        
+    context = {'quizzes': quizzes,
+               'categories': categories,
+               }
     
-    context = {'quizzes': quizzes}
     return render(request, "quiz/edit_quizzes.html", context)
 
 @transaction.atomic
